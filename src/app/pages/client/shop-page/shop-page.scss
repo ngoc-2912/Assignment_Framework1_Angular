@@ -1,0 +1,22 @@
+:host {
+  display: block;
+}
+
+.page-head {
+  background: linear-gradient(140deg, #e8f8ec, #fff7e6);
+  border: 1px solid #d6e8d8;
+}
+
+.product-image-wrap {
+  display: block;
+  overflow: hidden;
+}
+
+.product-image-wrap img {
+  object-fit: cover;
+  transition: transform 0.25s ease;
+}
+
+.product-image-wrap:hover img {
+  transform: scale(1.04);
+}

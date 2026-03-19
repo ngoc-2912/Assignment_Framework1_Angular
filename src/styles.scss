@@ -1,1 +1,45 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+	--app-bg: #f7f8fb;
+	--surface: #ffffff;
+	--text-main: #142035;
+	--text-muted: #5f6675;
+	--brand: #0f4c81;
+	--brand-dark: #0a3559;
+}
+
+html,
+body {
+	min-height: 100%;
+}
+
+body {
+	font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+	color: var(--text-main);
+	background:
+		radial-gradient(circle at 20% -10%, #ffedca 0, #ffedca 14%, transparent 40%),
+		radial-gradient(circle at 90% 10%, #d9efff 0, #d9efff 16%, transparent 42%),
+		var(--app-bg);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.navbar-brand {
+	font-family: 'Be Vietnam Pro', 'Segoe UI', sans-serif;
+}
+
+.btn-primary {
+	--bs-btn-bg: var(--brand);
+	--bs-btn-border-color: var(--brand);
+	--bs-btn-hover-bg: var(--brand-dark);
+	--bs-btn-hover-border-color: var(--brand-dark);
+}
+
+.card {
+	border-radius: 1rem;
+}

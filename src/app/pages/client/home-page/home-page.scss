@@ -1,0 +1,43 @@
+:host {
+  display: block;
+}
+
+.hero {
+  background: linear-gradient(135deg, #fff7e6, #dff3ff);
+  border: 1px solid #f0d7b3;
+}
+
+.hero-card {
+  background: #fff;
+  border: 1px solid #e5e9f2;
+  box-shadow: 0 12px 25px rgba(31, 41, 55, 0.08);
+}
+
+.category-card {
+  background: #ffffff;
+  border: 1px solid #e4e7ef;
+  transition: transform 0.2s ease;
+}
+
+.category-card:hover {
+  transform: translateY(-4px);
+}
+
+.product-card {
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.image-wrap {
+  display: block;
+  overflow: hidden;
+}
+
+.image-wrap img {
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.image-wrap:hover img {
+  transform: scale(1.05);
+}

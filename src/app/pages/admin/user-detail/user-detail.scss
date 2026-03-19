@@ -1,0 +1,75 @@
+/* CARD */
+.profile-luxury {
+  width: 420px;
+  padding: 35px;
+  border-radius: 25px;
+  background: rgba(26, 0, 51, 0.8);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #fff;
+}
+
+/* AVATAR */
+.avatar-wrapper {
+  width: 120px;
+  height: 120px;
+  margin: auto;
+  border-radius: 50%;
+  padding: 4px;
+  background: linear-gradient(135deg, #00f0ff, #ff00ff);
+}
+
+.avatar-wrapper img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* INFO */
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.info-item span {
+  color: #bbb;
+}
+
+/* SELECT */
+.select-luxury {
+  background: transparent;
+  border: 1px solid #444;
+  color: #fff;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.select-luxury:focus {
+  border-color: #8a2be2;
+  box-shadow: 0 0 10px #8a2be2;
+}
+
+/* BUTTON */
+.btn-luxury {
+  background: linear-gradient(135deg, #00f0ff, #ff00ff);
+  border: none;
+  padding: 12px;
+  border-radius: 50px;
+  font-weight: bold;
+  color: #000;
+  transition: 0.3s;
+}
+
+.btn-luxury:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #ff00ff;
+}
+
+/* LABEL */
+.form-label {
+  color: #bbb;
+}

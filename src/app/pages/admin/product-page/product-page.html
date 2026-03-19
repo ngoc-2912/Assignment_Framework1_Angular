@@ -1,0 +1,72 @@
+<!-- Table -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+  
+  <!-- Bên trái -->
+  <p class="mb-0">
+    Quản lý sản phẩm > <strong>Danh sách</strong>
+  </p>
+
+  <!-- Bên phải -->
+  <button class="btn btn-dark" routerLink="/admin/product-create">
+    <i class="bi bi-plus-lg me-1"></i> Thêm sản phẩm
+  </button>
+
+</div>
+<div class="container border rounded p-4 bg-light">
+  <h3 class="mb-4">Danh sách sản phẩm</h3>
+  <div class="table-responsive">
+    <table id="myTable" class="table table-striped border">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Ảnh</th>
+          <th>Tên sản phẩm</th>
+          <th>Danh mục</th>
+          <th>Giá</th>
+          <th>Trạng thái</th>
+          <th class="text-end">Hành động</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>
+            <img src="https://via.placeholder.com/50" class="table-img" />
+          </td>
+          <td>Máy lọc không khí</td>
+          <td>Không khí</td>
+          <td>3.200.000đ</td>
+          <td><span class="badge bg-success">Còn hàng</span></td>
+          <td class="text-end">
+            <button class="btn btn-sm btn-outline-warning me-1" routerLink="/admin/product-edit/1">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+
+        <tr>
+          <td>2</td>
+          <td>
+            <img src="https://via.placeholder.com/50" class="table-img" />
+          </td>
+          <td>Nồi chiên không dầu</td>
+          <td>Nhà bếp</td>
+          <td>2.500.000đ</td>
+          <td><span class="badge bg-danger">Hết hàng</span></td>
+          <td class="text-end">
+            <button class="btn btn-sm btn-outline-warning me-1" routerLink="/admin/product-edit/1">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

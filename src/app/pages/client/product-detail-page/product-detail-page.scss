@@ -1,0 +1,16 @@
+:host {
+  display: block;
+}
+
+.detail-image {
+  border: 1px solid #e2e8f0;
+  background: #fff;
+}
+
+.detail-image img {
+  object-fit: cover;
+}
+
+.qty-box {
+  width: 160px;
+}

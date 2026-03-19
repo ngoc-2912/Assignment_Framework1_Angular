@@ -1,0 +1,72 @@
+<!-- Header -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+  <p class="mb-0">
+    Quản lý người dùng > <strong>Danh sách</strong>
+  </p>
+
+</div>
+
+<div class="container border rounded p-4 bg-light">
+  <h3 class="mb-4">Danh sách người dùng</h3>
+
+  <div class="table-responsive">
+    <table id="myTable" class="table table-striped table-bordered align-middle">
+
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Avatar</th>
+          <th>Họ tên</th>
+          <th>Email</th>
+          <th>SĐT</th>
+          <th>Vai trò</th>
+          <th>Trạng thái</th>
+          <th>Ngày tạo</th>
+          <th class="text-end">Hành động</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr>
+          <td>1</td>
+          <td>
+            <img src="https://i.pravatar.cc/50?img=1" class="rounded-circle" width="40" />
+          </td>
+          <td>Nguyễn Văn A</td>
+          <td>vana@gmail.com</td>
+          <td>0123456789</td>
+          <td><span class="badge bg-secondary">Khách hàng</span></td>
+          <td><span class="badge bg-success">Hoạt động</span></td>
+          <td>20/03/2026</td>
+          <td class="text-end">
+            <button class="btn btn-sm btn-outline-info me-1" routerLink="/admin/user-detail/1">
+              <i class="bi bi-eye"></i>
+            </button>
+          </td>
+        </tr>
+
+        <tr>
+          <td>2</td>
+          <td>
+            <img src="https://i.pravatar.cc/50?img=2" class="rounded-circle" width="40" />
+          </td>
+          <td>Trần Thị B</td>
+          <td>thib@gmail.com</td>
+          <td>0987654321</td>
+          <td><span class="badge bg-secondary">Khách hàng</span></td>
+          <td><span class="badge bg-danger">Bị khóa</span></td>
+          <td>18/03/2026</td>
+          <td class="text-end">
+            <button class="btn btn-sm btn-outline-info me-1" routerLink="/admin/user-detail/2">
+              <i class="bi bi-eye"></i>
+            </button>
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+/* ===== SEARCH WRAP ===== */
+.search {
+//   width: 280px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-radius: 12px;
+  padding: 10px 15px 10px 40px;
+  outline: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+}
+
+/* Placeholder */
+.search::placeholder {
+  color: #888;
+}
+
+/* Focus effect */
+.search:focus {
+  border: 1px solid #6a00ff;
+  box-shadow: 0 0 10px rgba(106, 0, 255, 0.6);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Wrapper để thêm icon */
+.search-box {
+  position: relative;
+}
+
+/* Icon */
+.search-box i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+/* Icon khi focus */
+.search:focus + i {
+  color: #6a00ff;
+}

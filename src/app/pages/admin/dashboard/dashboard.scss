@@ -1,0 +1,108 @@
+/* ===== GLOBAL ===== */
+body {
+  background: #0f0120;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* ===== LAYOUT ===== */
+.main {
+  background: radial-gradient(circle at top, #2b0057, #0f0120);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  background: #140028;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.sidebar a {
+  display: block;
+  color: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+  background: #2b0057;
+  color: black;
+}
+
+
+
+/* ===== CARD ===== */
+.dashboard-card {
+  background: linear-gradient(145deg, #1a0033, #220044);
+  border: none;
+  padding: 20px;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+}
+
+/* Glow effect */
+.dashboard-card::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.1), transparent);
+  top: 0;
+  left: -100%;
+  transition: 0.5s;
+}
+
+.dashboard-card:hover::before {
+  left: 100%;
+}
+
+/* ===== CHART ===== */
+.fake-chart {
+  height: 200px;
+  background: linear-gradient(90deg, #00f0ff, #ff00ff);
+  border-radius: 10px;
+  opacity: 0.25;
+  margin-top: 10px;
+}
+
+/* ===== PROGRESS ===== */
+.progress {
+  height: 8px;
+  background: #333;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  background: linear-gradient(90deg, #00f0ff, #ff00ff);
+}
+
+/* ===== TEXT ===== */
+.card-title {
+  font-size: 14px;
+  color: #aaa;
+}
+
+.card-value {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+}
