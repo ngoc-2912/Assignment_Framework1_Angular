@@ -1,0 +1,107 @@
+:host {
+  display: block;
+}
+
+.profile-head {
+  border: 1px solid #dbe4f2;
+  background: linear-gradient(135deg, #eef7ff, #fff9ef);
+}
+
+.profile-avatar {
+  width: 7rem;
+  height: 7rem;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 3px solid #ffffff;
+  box-shadow: 0 10px 24px rgba(15, 76, 129, 0.16);
+}
+
+.profile-card {
+  background: #ffffff;
+  border: 1px solid #dbe4f2;
+  box-shadow: 0 10px 24px rgba(17, 24, 39, 0.06);
+}
+
+.summary-item {
+  border: 1px solid #e6ecf7;
+  border-radius: 0.85rem;
+  padding: 0.75rem 0.95rem;
+  background: #fdfefe;
+}
+
+/* Recent orders table */
+.profile-card .table {
+  border-top: 1px solid #dbe4f2;
+}
+
+.profile-card .table thead {
+  background: #f8fafc;
+  border-bottom: 2px solid #dbe4f2;
+}
+
+.profile-card .table th {
+  color: #475569;
+  font-weight: 600;
+  border: none;
+  padding: 1rem 0;
+}
+
+.profile-card .table td {
+  border-color: #dbe4f2;
+  padding: 0.95rem 0;
+}
+
+/* Rank tier box */
+.rank-tier {
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* Setting buttons */
+.setting-btn {
+  border: 1px solid #dbe4f2;
+  background: #ffffff;
+  color: #0f4c81;
+  transition: all 0.2s ease;
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+.setting-btn:hover {
+  border-color: #0f4c81;
+  background: #f0f9ff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(15, 76, 129, 0.1);
+}
+
+.setting-btn.text-danger {
+  color: #dc2626;
+}
+
+.setting-btn.text-danger:hover {
+  border-color: #dc2626;
+  background: #fef2f2;
+}
+
+/* Address & payment info */
+.address-box,
+.payment-box {
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.address-box {
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.payment-box {
+  border-color: rgba(139, 92, 246, 0.2);
+}
+
+.profile-head {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.profile-head .menu-bottom {
+  margin-top: auto;
+}

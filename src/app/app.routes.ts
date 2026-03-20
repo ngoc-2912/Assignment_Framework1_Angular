@@ -45,6 +45,16 @@ export const routes: Routes = [
 					import('./pages/client/register-page/register-page')
 						.then(m => m.RegisterPage),
 			},
+			{
+				path: 'about',
+				loadComponent: () =>
+					import('./pages/client/about-page/about-page').then(m => m.AboutPage),
+			},
+			{
+				path: 'profile',
+				loadComponent: () =>
+					import('./pages/client/profile-page/profile-page').then(m => m.ProfilePage),
+			},
 		],
 	},
 

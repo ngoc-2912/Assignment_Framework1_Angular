@@ -1,0 +1,35 @@
+:host {
+	display: block;
+}
+
+.site-footer {
+	border-top: 1px solid #dbe4f2;
+	background:
+		radial-gradient(circle at 10% 0%, rgba(208, 231, 255, 0.35), transparent 36%),
+		radial-gradient(circle at 90% 20%, rgba(255, 236, 206, 0.35), transparent 38%),
+		#ffffff;
+}
+
+.site-footer h2,
+.site-footer h3 {
+	color: #101828;
+}
+
+.footer-link {
+	color: #111111;
+	text-decoration: none;
+	font-weight: 500;
+	transition: opacity 0.2s ease;
+}
+
+.footer-link:hover,
+.footer-link:focus,
+.footer-link:active {
+	color: #111111;
+	text-decoration: none;
+	opacity: 0.72;
+}
+
+.site-footer hr {
+	border-color: #dbe4f2;
+}

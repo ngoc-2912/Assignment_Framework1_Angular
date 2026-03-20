@@ -1,0 +1,32 @@
+:host {
+  display: block;
+}
+
+.about-hero {
+  background: linear-gradient(135deg, #e5f2ff 0%, #f8fbff 52%, #fff6e7 100%);
+  border: 1px solid #d8e4f7;
+}
+
+.about-highlight {
+  background: #ffffff;
+  border: 1px solid #dbe4f2;
+  box-shadow: 0 12px 28px rgba(31, 41, 55, 0.07);
+}
+
+.about-card {
+  background: #ffffff;
+  border: 1px solid #e3e8f3;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.about-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 22px rgba(31, 41, 55, 0.06);
+}
+
+.about-contact {
+  background: #ffffff;
+  border: 1px solid #e3e8f3;
+}
