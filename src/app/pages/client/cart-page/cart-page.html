@@ -1,4 +1,5 @@
-<div class="cart-page container py-4">
+
+<div class="cart-page container py-4 mt-custom" >
   <section class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
     <h1 class="h2 fw-bold mb-0">Giỏ hàng của bạn</h1>
     <button class="btn btn-outline-danger" type="button">Xóa tất cả</button>
@@ -78,19 +79,49 @@
       <aside class="card border-0 shadow-sm">
         <div class="card-body">
           <h2 class="h5 fw-bold mb-3">Tóm tắt đơn hàng</h2>
-          <div class="d-flex justify-content-between mb-2">
-            <span>Tạm tính</span>
-            <strong>5.980.000 VND</strong>
-          </div>
-          <div class="d-flex justify-content-between mb-3">
-            <span>Vận chuyển</span>
-            <strong>Miễn phí</strong>
-          </div>
+         
+
+      <div class="d-flex justify-content-between mb-2">
+  <span>Tạm tính</span>
+  <strong>5.980.000 VND</strong>
+</div>
+
+
+<div class="d-flex justify-content-between mb-3">
+  <span>Vận chuyển</span>
+  <strong>20.000 VND</strong>
+</div>
+<div class="mb-3">
+  <label class="form-label fw-semibold">Mã giảm giá</label>
+<div class="voucher-box">
+  <input type="text" class="form-control" placeholder="Nhập mã">
+  <button class="btn btn-dark">Áp dụng</button>
+</div>
+</div>
+<div class="mb-3">
+  <span class="d-block mb-2 fw-semibold">Phương thức thanh toán</span>
+
+  <div class="payment-option">
+    <input type="radio" name="payment" id="cod" checked>
+    <label for="cod">Thanh toán khi nhận hàng (COD)</label>
+  </div>
+
+  <div class="payment-option">
+    <input type="radio" name="payment" id="bank">
+    <label for="bank">Chuyển khoản ngân hàng</label>
+  </div>
+</div>
+
+
+<hr />
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <span class="fw-semibold">Tổng cộng</span>
+  <strong class="fs-5">6.000.000 VND</strong>
+</div>
+
           <hr />
-          <div class="d-flex justify-content-between align-items-center mb-4">
-            <span class="fw-semibold">Tổng cộng</span>
-            <strong class="fs-5">5.980.000 VND</strong>
-          </div>
+         
           <a class="btn btn-dark w-100" routerLink="/checkout">Tiến hành thanh toán</a>
         </div>
       </aside>
