@@ -7,6 +7,13 @@
   </button>
 </div>
 
+@if (message() && messageType()) {
+  <div class="alert alert-{{ messageType() }} alert-dismissible fade show">
+    {{ message() }}
+    <button type="button" class="btn-close" (click)="message.set('')"></button>
+  </div>
+}
+
 <div class="container border rounded p-4 bg-light">
   <h3 class="mb-4">Danh sách danh mục</h3>
 
@@ -16,7 +23,6 @@
         <tr>
           <th>#</th>
           <th>Tên danh mục</th>
-          <th>Slug</th>
           <th>Mô tả</th>
           <th>Trạng thái</th>
           <th>Ngày tạo</th>
@@ -25,40 +31,52 @@
       </thead>
 
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>Nhà bếp</td>
-          <td>nha-bep</td>
-          <td>Danh mục đồ dùng nhà bếp</td>
-          <td><span class="badge bg-success">Hiển thị</span></td>
-          <td>20/03/2026</td>
-          <td class="text-end">
-            <button class="btn btn-sm btn-outline-warning me-1" routerLink="/admin/category-edit/1">
-              <i class="bi bi-pencil"></i>
-            </button>
-            <button class="btn btn-sm btn-outline-danger">
-              <i class="bi bi-trash"></i>
-            </button>
-          </td>
-        </tr>
-
-        <tr>
-          <td>2</td>
-          <td>Điện tử</td>
-          <td>dien-tu</td>
-          <td>Thiết bị điện tử</td>
-          <td><span class="badge bg-secondary">Ẩn</span></td>
-          <td>18/03/2026</td>
-          <td class="text-end">
-            <button class="btn btn-sm btn-outline-warning me-1" routerLink="/admin/category-edit/1">
-              <i class="bi bi-pencil"></i>
-            </button>
-            <button class="btn btn-sm btn-outline-danger">
-              <i class="bi bi-trash"></i>
-            </button>
-          </td>
-        </tr>
+        @for (item of categories(); track item.id; let i = $index) {
+          <tr>
+            <td>{{ i + 1 }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.description !== '' ? item.description : '-' }}</td>
+            <td>
+              @if (item.status === '1') {
+                <span class="badge bg-success">Hiển thị</span>
+              } @else {
+                <span class="badge bg-secondary">Ẩn</span>
+              }
+            </td>
+            <td>{{ item.createdAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td class="text-end">
+              <button
+                class="btn btn-sm btn-outline-warning me-1"
+                routerLink="/admin/category-edit/{{ item.id }}"
+              >
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger" (click)="selectCategory(item)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+        }
       </tbody>
     </table>
   </div>
 </div>
+
+@if (showModal()) {
+  <div class="modal show d-block" style="background: rgba(0, 0, 0, 0.5)">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Xác nhận xóa</h5>
+        </div>
+        <div class="modal-body">
+          Bạn có chắc muốn xóa <strong>{{ selectedCategory()?.name }}</strong> không?
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="showModal.set(false)">Hủy</button>
+          <button class="btn btn-danger" (click)="confirmDelete()">Xóa</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

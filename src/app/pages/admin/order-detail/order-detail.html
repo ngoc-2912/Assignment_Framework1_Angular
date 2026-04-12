@@ -1,84 +1,97 @@
 <div class="container py-4">
 
-  <!-- Header -->
+  @if (message() && messageType()) {
+    <div class="alert alert-{{ messageType() }} alert-dismissible fade show">
+      {{ message() }}
+      <button type="button" class="btn-close" (click)="message.set('')"></button>
+    </div>
+  }
+
+  @if (order(); as currentOrder) {
+
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3> Chi tiết đơn hàng #ORD001</h3>
+    <h3>Chi tiết đơn hàng {{ currentOrder.code !== '' ? currentOrder.code : '#ORD' + currentOrder.id }}</h3>
+    <span class="badge {{ getStatusClass(currentOrder.status) }}">{{ getStatusText(currentOrder.status) }}</span>
   </div>
 
   <div class="row g-4">
 
-    <!-- Thông tin khách -->
     <div class="col-md-6">
       <div class="card shadow-sm p-3">
-        <h5 class="mb-3"> Thông tin khách hàng</h5>
-        <p><strong>Tên:</strong> Nguyễn Văn A</p>
-        <p><strong>SĐT:</strong> 0123456789</p>
-        <p><strong>Địa chỉ:</strong> Cần Thơ</p>
+        <h5 class="mb-3">Thông tin khách hàng</h5>
+        <p><strong>Tên:</strong> {{ currentOrder.User.full_name }}</p>
+        <p><strong>Email:</strong> {{ currentOrder.User.email }}</p>
       </div>
     </div>
 
-    <!-- Trạng thái -->
     <div class="col-md-6">
       <div class="card shadow-sm p-3">
         <h5 class="mb-3">Trạng thái đơn hàng</h5>
 
-        <!-- Payment -->
         <div class="mb-3">
-          <label class="form-label">Thanh toán</label>
-          <input class="form-control" value="Đã thanh toán" disabled />
+          <label class="form-label">Mã đơn hàng</label>
+          <input class="form-control" [value]="currentOrder.code !== '' ? currentOrder.code : '#ORD' + currentOrder.id" disabled />
         </div>
 
-        <!-- Status (edit được) -->
+        <div class="mb-3">
+          <label class="form-label">Ngày tạo</label>
+          <input class="form-control" [value]="currentOrder.createdAt | date: 'dd/MM/yyyy HH:mm'" disabled />
+        </div>
+
         <div class="mb-3">
           <label class="form-label">Trạng thái đơn</label>
-          <select class="form-select">
-            <option>Chờ xác nhận</option>
-            <option>Đang giao</option>
-            <option>Hoàn thành</option>
-            <option>Đã hủy</option>
+          <select class="form-select" [value]="selectedStatus()" (change)="selectedStatus.set($any($event.target).value)">
+            <option value="0" [disabled]="!canSelectStatus('0')">Chờ xác nhận</option>
+            <option value="1" [disabled]="!canSelectStatus('1')">Đã xác nhận</option>
+            <option value="2" [disabled]="!canSelectStatus('2')">Đang giao</option>
+            <option value="3" [disabled]="!canSelectStatus('3')">Hoàn thành</option>
           </select>
+          <small class="text-secondary">Chỉ được cập nhật tiến lên, không được lùi trạng thái.</small>
         </div>
 
-        <button class="btn btn-dark w-100"> Cập nhật trạng thái</button>
+        <button class="btn btn-dark w-100" type="button" (click)="updateStatus()">Cập nhật trạng thái</button>
       </div>
     </div>
 
-    <!-- Danh sách sản phẩm -->
     <div class="col-12">
       <div class="card shadow-sm p-3">
-        <h5 class="mb-3"> Sản phẩm</h5>
+        <h5 class="mb-3">Sản phẩm</h5>
 
         <div class="table-responsive">
           <table class="table table-bordered align-middle">
             <thead>
               <tr>
                 <th>#</th>
-                <th>Sản phẩm</th>
+                <th>Mã chi tiết</th>
+                <th>Mã sản phẩm</th>
                 <th>Giá</th>
                 <th>Số lượng</th>
                 <th>Tổng</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>1</td>
-                <td>Máy lọc không khí</td>
-                <td>3.200.000đ</td>
-                <td>1</td>
-                <td>3.200.000đ</td>
-              </tr>
+              @for (item of currentOrder.OrderDetails; track item.id; let i = $index) {
+                <tr>
+                  <td>{{ i + 1 }}</td>
+                  <td>#{{ item.id }}</td>
+                  <td>#PROD{{ item.product_id }}</td>
+                  <td>{{ formatPrice(item.price) }}</td>
+                  <td>{{ item.quantity }}</td>
+                  <td>{{ getLineTotal(item.price, item.quantity) }}</td>
+                </tr>
+              }
             </tbody>
           </table>
         </div>
 
-        <!-- Tổng -->
         <div class="text-end mt-3">
-          <h5>Tổng tiền: <span class="text-danger">3.200.000đ</span></h5>
+          <h5>Tổng tiền: <span class="text-danger">{{ formatPrice(currentOrder.total_price) }}</span></h5>
         </div>
 
       </div>
     </div>
 
   </div>
+  }
 
 </div>

@@ -1,18 +1,18 @@
-export interface Product {
+export interface IProductCategory {
     id: number;
-    slug: string;
     name: string;
-    price: number;
-    oldPrice?: number;
-    rating: number;
-    reviewCount: number;
-    category: string;
-    brand: string;
-    shortDescription: string;
-    description: string;
-    imageUrl: string;
-    tags: string[];
-    inStock: boolean;
 }
 
-export type IProduct = Product;
+export interface IProduct {
+    id: number;
+    name: string;
+    slug: string;
+    description: string;
+    price: string;
+    image: string;
+    category_id: number;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
+    Category?: IProductCategory;
+}

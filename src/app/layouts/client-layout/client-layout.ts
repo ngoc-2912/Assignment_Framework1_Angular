@@ -5,9 +5,9 @@ import { Header } from '../../components/client/header/header';
 
 @Component({
   selector: 'app-client-layout',
-  standalone: true, // 🔥 BẮT BUỘC
+  standalone: true,
   imports: [RouterOutlet, Header, AppFooter],
   templateUrl: './client-layout.html',
-  styleUrls: ['./client-layout.scss'], // 🔥 sửa lại
+  styleUrls: ['./client-layout.scss'],
 })
 export class ClientLayout {}

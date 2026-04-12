@@ -4,18 +4,56 @@
       <h1 class="h3 fw-bold mb-2">Đăng nhập tài khoản</h1>
       <p class="text-secondary mb-4">Theo dõi đơn hàng, lưu danh sách yêu thích và nhận ưu đãi.</p>
 
-      <form>
+      <form [formGroup]="loginForm">
         <div class="mb-3">
-          <label for="login-email" class="form-label">Email</label>
-          <input id="login-email" class="form-control" type="email" placeholder="Vui lòng nhập email" />
+          <label for="email" class="form-label">Email</label>
+          <input
+            id="email"
+            class="form-control"
+            type="email"
+            placeholder="Vui lòng nhập email"
+            formControlName="email"
+          />
+          @if (submitted() && f['email'].errors) {
+            <div class="text-danger">
+              @if (f['email'].errors['required']) {
+                <div>Email không được để trống</div>
+              }
+              @if (f['email'].errors['email']) {
+                <div>Email không hợp lệ</div>
+              }
+            </div>
+          }
         </div>
 
         <div class="mb-4">
-          <label for="login-password" class="form-label">Mật khẩu</label>
-          <input id="login-password" class="form-control" type="password" placeholder="Vui lòng nhập mật khẩu" />
+          <label for="password" class="form-label">Mật khẩu</label>
+          <input
+            id="password"
+            class="form-control"
+            type="password"
+            placeholder="Vui lòng nhập mật khẩu"
+            formControlName="password"
+          />
+          @if (submitted() && f['password'].errors) {
+            <div class="text-danger">
+              @if (f['password'].errors['required']) {
+                <div>Password không được để trống</div>
+              }
+
+              @if (f['password'].errors['minlength']) {
+                <div>Password tối thiểu 6 ký tự</div>
+              }
+            </div>
+          }
         </div>
 
-        <button class="btn btn-dark w-100" type="button">Đăng nhập</button>
+        @if (errorMessage()) {
+          <div class="text-danger mb-2">
+            {{ errorMessage() }}
+          </div>
+        }
+        <button class="btn btn-dark w-100" type="button" (click)="login()">Đăng nhập</button>
       </form>
 
       <p class="mt-4 mb-0 text-secondary">

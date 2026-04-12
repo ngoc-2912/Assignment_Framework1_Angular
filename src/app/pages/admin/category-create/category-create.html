@@ -1,45 +1,68 @@
 <div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <p class="mb-0">Quản lý danh mục > <strong>Thêm danh mục</strong></p>
+    <a class="btn btn-outline-secondary" routerLink="/admin/categories">Quay lại</a>
+  </div>
 
-  <p>Quản lý danh mục > <strong>Thêm danh mục</strong></p>
+  @if (message() && messageType()) {
+    <div class="alert alert-{{ messageType() }} alert-dismissible fade show">
+      {{ message() }}
+      <button type="button" class="btn-close" (click)="message.set('')"></button>
+    </div>
+  }
 
   <div class="form border rounded p-4 bg-light mx-auto">
     <h2 class="text-center mb-4">Thêm danh mục</h2>
 
-    <form class="d-flex flex-column gap-3">
-
+    <form class="d-flex flex-column gap-3" [formGroup]="createForm">
       <!-- Tên danh mục -->
       <div>
         <label class="form-label">Tên danh mục</label>
-        <input type="text" class="form-control" placeholder="Nhập tên danh mục..." />
-      </div>
-
-      <!-- Slug -->
-      <div>
-        <label class="form-label">Slug</label>
-        <input type="text" class="form-control" placeholder="vi-du: nha-bep" />
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Nhập tên danh mục..."
+          formControlName="name"
+        />
+        @if (submitted() && f['name'].errors) {
+          <div class="text-danger">
+            @if (f['name'].errors['required']) {
+              <div>Tên danh mục không được để trống</div>
+            }
+            @if (f['name'].errors['minlength']) {
+              <div>Tên danh mục phải có ít nhất 3 ký tự</div>
+            }
+            @if (f['name'].errors['maxlength']) {
+              <div>Tên danh mục không được vượt quá 100 ký tự</div>
+            }
+          </div>
+        }
+        @if (nameError()) {
+          <div class="text-danger">{{ nameError() }}</div>
+        }
       </div>
 
       <!-- Trạng thái -->
       <div>
         <label class="form-label">Trạng thái</label>
-        <select class="form-select">
-          <option selected>Hiển thị</option>
-          <option>Ẩn</option>
+        <select class="form-select" formControlName="status">
+          <option selected value="1">Hiển thị</option>
+          <option value="0">Ẩn</option>
         </select>
       </div>
 
       <!-- Mô tả -->
       <div>
         <label class="form-label">Mô tả</label>
-        <textarea rows="3" class="form-control" placeholder="Nhập mô tả...">Danh mục đồ nhà bếp</textarea>
+        <textarea
+          rows="3"
+          class="form-control"
+          placeholder="Nhập mô tả..."
+          formControlName="description"
+        ></textarea>
       </div>
-
       <!-- Button -->
-      <button class="btn btn-primary mt-3">
-        Thêm
-      </button>
-
+      <button type="button" class="btn btn-primary mt-3" (click)="addCategory()">Thêm</button>
     </form>
   </div>
-
 </div>

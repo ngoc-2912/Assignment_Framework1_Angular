@@ -1,47 +1,60 @@
-<h4>Hồ sơ người dùng</h4>
-<div class="container py-3 d-flex">
-  <div class="profile-luxury">
-    <!-- Avatar -->
-    <div class="text-center">
-      <div class="avatar-wrapper">
-        <img src="https://i.pravatar.cc/120?img=5" />
-      </div>
-
-      <h4 class="mt-3 mb-1">Nguyễn Văn A</h4>
-      <p>vana@gmail.com</p>
+<div class="container py-4">
+  @if (message() && messageType()) {
+    <div class="alert alert-{{ messageType() }} alert-dismissible fade show">
+      {{ message() }}
+      <button type="button" class="btn-close" (click)="message.set('')"></button>
     </div>
+  }
 
-    <!-- Info -->
-    <div class="info mt-4">
-      <div class="info-item">
-        <span>SĐT</span>
-        <strong>0123456789</strong>
-      </div>
+  @if (user(); as currentUser) {
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h4 class="mb-0">Hồ sơ người dùng</h4>
+      <a class="btn btn-outline-secondary" routerLink="/admin/users">Quay lại</a>
+    </div>
+    <div class="d-flex py-3">
+      <div class="profile-luxury">
+        <div class="text-center">
+          <h4 class="mt-3 mb-1">{{ currentUser.full_name }}</h4>
+          <p>{{ currentUser.email }}</p>
+        </div>
 
-      <div class="info-item">
-        <span>Vai trò</span>
-        <span class="badge bg-primary">Admin</span>
-      </div>
+        <div class="info mt-4">
+          <div class="info-item">
+            <span>ID</span>
+            <strong>#{{ currentUser.id }}</strong>
+          </div>
 
-      <div class="info-item">
-        <span>Ngày tạo</span>
-        <strong>20/03/2026</strong>
+          <div class="info-item">
+            <span>Vai trò</span>
+            <span class="badge {{ getRoleClass(currentUser.role) }}">{{ getRoleText(currentUser.role) }}</span>
+          </div>
+
+          <div class="info-item">
+            <span>Ngày tạo</span>
+            <strong>{{ currentUser.createdAt | date: 'dd/MM/yyyy HH:mm' }}</strong>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <label class="form-label">Trạng thái tài khoản</label>
+
+          <div class="status-box">
+            <select
+              class="form-select select-luxury"
+              [value]="selectedActive()"
+              (change)="selectedActive.set($any($event.target).value)"
+            >
+              <option value="1">Hoạt động</option>
+              <option value="0">Bị khóa</option>
+            </select>
+          </div>
+          <small class="text-secondary">Hiện tại: {{ getActiveText(currentUser.active) }}</small>
+        </div>
+
+        <button class="btn btn-luxury w-100 mt-4" type="button" (click)="updateActive()">
+          Cập nhật trạng thái
+        </button>
       </div>
     </div>
-
-    <!-- Status -->
-    <div class="mt-4">
-      <label class="form-label">Trạng thái tài khoản</label>
-
-      <div class="status-box">
-        <select class="form-select select-luxury">
-          <option>Hoạt động</option>
-          <option>Bị khóa</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Button -->
-    <button class="btn btn-luxury w-100 mt-4">Cập nhật trạng thái</button>
-  </div>
+  }
 </div>

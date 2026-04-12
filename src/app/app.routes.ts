@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-
+import { authGuard } from './auth/auth.guard';
 export const routes: Routes = [
 	// ===== CLIENT =====
 	{
@@ -73,23 +73,26 @@ export const routes: Routes = [
 				path: 'dashboard',
 				loadComponent: () =>
 					import('./pages/admin/dashboard/dashboard').then(m => m.Dashboard),
+				canActivate: [authGuard],
 			},
 			// CATEGORY
 			{
 				path: 'categories',
 				loadComponent: () =>
 					import('./pages/admin/category-page/category-page').then(m => m.CategoryPage),
+				canActivate: [authGuard],
 			},
 			{
 				path: 'category-create',
 				loadComponent: () =>
 					import('./pages/admin/category-create/category-create').then(m => m.CategoryCreate),
+				canActivate: [authGuard],
 			},
 			{
 				path: 'category-edit/:id',
 				loadComponent: () =>
 					import('./pages/admin/category-edit/category-edit').then(m => m.CategoryEdit),
-
+				canActivate: [authGuard],
 			},
 
 
@@ -98,16 +101,19 @@ export const routes: Routes = [
 				path: 'products',
 				loadComponent: () =>
 					import('./pages/admin/product-page/product-page').then(m => m.ProductPage),
+				canActivate: [authGuard],
 			},
 			{
 				path: 'product-create',
 				loadComponent: () =>
 					import('./pages/admin/product-create/product-create').then(m => m.ProductCreate),
+				canActivate: [authGuard],
 			},
 			{
 				path: 'product-edit/:id',
 				loadComponent: () =>
 					import('./pages/admin/product-edit/product-edit').then(m => m.ProductEdit),
+				canActivate: [authGuard],
 			},
 
 
@@ -116,11 +122,13 @@ export const routes: Routes = [
 				path: 'orders',
 				loadComponent: () =>
 					import('./pages/admin/order-page/order-page').then(m => m.OrderPage),
+				canActivate: [authGuard],
 			},
 			{
 				path: 'order-detail/:id',
 				loadComponent: () =>
 					import('./pages/admin/order-detail/order-detail').then(m => m.OrderDetail),
+				canActivate: [authGuard],
 			},
 
 			// USER
@@ -128,11 +136,13 @@ export const routes: Routes = [
 				path: 'users',
 				loadComponent: () =>
 					import('./pages/admin/user-page/user-page').then(m => m.UserPage),
+				canActivate: [authGuard],
 			},
 			{
 				path: 'user-detail/:id',
 				loadComponent: () =>
 					import('./pages/admin/user-detail/user-detail').then(m => m.UserDetail),
+				canActivate: [authGuard],
 			}
 		],
 	},
