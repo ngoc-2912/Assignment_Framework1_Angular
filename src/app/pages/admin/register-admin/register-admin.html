@@ -1,0 +1,110 @@
+<div class="card register-card border-0 shadow-lg rounded-5 overflow-hidden">
+  <div class="row g-0">
+    <div class="col-lg-5 d-none d-lg-block register-bg">
+      <div class="h-100 d-flex flex-column justify-content-center p-5 text-white bg-dark-luxury">
+        <h2 class="fw-bold mb-3">Chào mừng bạn!</h2>
+        <p class="text-white-50">
+          Hãy gia nhập cộng đồng SmartNest để trải nghiệm những tiện ích tuyệt vời nhất.
+        </p>
+        <div class="mt-4">
+          <div class="d-flex align-items-center mb-3">
+            <i class="bi bi-check-circle-fill me-2 text-success"></i>
+            <span>Quản lý nhà thông minh</span>
+          </div>
+          <div class="d-flex align-items-center mb-3">
+            <i class="bi bi-check-circle-fill me-2 text-success"></i>
+            <span>Bảo mật dữ liệu tuyệt đối</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-7 bg-white">
+      <div class="card-body p-4 p-md-5">
+        <div class="text-center mb-4">
+          <h3 class="fw-bold text-dark">Đăng ký tài khoản</h3>
+          <p class="text-muted small">Vui lòng điền thông tin bên dưới</p>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+          <!-- ALERT -->
+          @if (message() && messageType()) {
+            <div class="alert alert-{{ messageType() }} alert-dismissible fade show mb-3">
+              {{ message() }}
+              <button type="button" class="btn-close" (click)="message.set('')"></button>
+            </div>
+          }
+
+          <form [formGroup]="registerForm" (ngSubmit)="registerAdmin()">
+            <!-- FULL NAME -->
+            <div class="mb-3">
+              <label class="form-label small fw-bold text-muted text-uppercase">Họ và tên</label>
+              <div class="input-group luxury-input">
+                <span class="input-group-text bg-light border-0">
+                  <i class="bi bi-person text-primary"></i>
+                </span>
+                <input
+                  type="text"
+                  formControlName="full_name"
+                  class="form-control bg-light border-0"
+                  placeholder="Vui lòng nhập họ và tên"
+                />
+              </div>
+
+              @if (submitted() && f['full_name'].errors) {
+                <small class="text-danger">Không được để trống</small>
+              }
+            </div>
+
+            <!-- EMAIL -->
+            <div class="mb-3">
+              <label class="form-label small fw-bold text-muted text-uppercase">Email</label>
+              <div class="input-group luxury-input">
+                <span class="input-group-text bg-light border-0">
+                  <i class="bi bi-envelope text-primary"></i>
+                </span>
+                <input
+                  type="email"
+                  formControlName="email"
+                  class="form-control bg-light border-0"
+                  placeholder="Vui lòng nhập email"
+                />
+              </div>
+
+              @if (submitted() && f['email'].errors) {
+                <small class="text-danger">Email không hợp lệ</small>
+              }
+            </div>
+
+            <!-- PASSWORD -->
+            <div class="mb-4">
+              <label class="form-label small fw-bold text-muted text-uppercase">Mật khẩu</label>
+              <div class="input-group luxury-input">
+                <span class="input-group-text bg-light border-0">
+                  <i class="bi bi-lock text-primary"></i>
+                </span>
+                <input
+                  type="password"
+                  formControlName="password"
+                  class="form-control bg-light border-0"
+                  placeholder="Vui lòng nhập mật khẩu"
+                />
+              </div>
+
+              @if (submitted() && f['password'].errors) {
+                <small class="text-danger">Mật khẩu tối thiểu 6 ký tự</small>
+              }
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-sm mb-3"
+            >
+              TẠO ADMIN
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

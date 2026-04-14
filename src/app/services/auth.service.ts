@@ -23,6 +23,24 @@ export class AuthService {
         });
     }
 
+    registerAdmin(form: any) {
+        const token = localStorage.getItem("token");
+
+        return axios.post(
+            API_URL + "/users/admin-register",
+            {
+                full_name: form.full_name.trim(),
+                email: form.email.trim(),
+                password: form.password,
+            },
+            {
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
+            }
+        );
+    }
+
     saveToken(token: string) {
         localStorage.setItem('token', token);
     }

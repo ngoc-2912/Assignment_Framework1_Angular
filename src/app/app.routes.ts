@@ -143,6 +143,12 @@ export const routes: Routes = [
 				loadComponent: () =>
 					import('./pages/admin/user-detail/user-detail').then(m => m.UserDetail),
 				canActivate: [authGuard],
+			},
+			{
+				path: 'register-admin',
+				loadComponent: () =>
+					import('./pages/admin/register-admin/register-admin').then(m => m.RegisterAdmin),
+				canActivate: [authGuard],
 			}
 		],
 	},

@@ -3,7 +3,8 @@ import { register } from "module";
 export const API_ENDPOINT = {
     auth: {
         login: '/users/login',
-        register: '/users/register'
+        register: '/users/register',
+        registerAdmin: '/users/register-admin',
     },
     category: {
         list: '/categories/list',

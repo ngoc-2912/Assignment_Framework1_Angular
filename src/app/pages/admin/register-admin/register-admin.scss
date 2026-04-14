@@ -1,0 +1,61 @@
+$primary: #4e73df;
+$dark-bg: #1e1e2d;
+
+.register-wrapper {
+    min-height: 100vh;
+    background: radial-gradient(circle at top left, #f8f9fc 0%, #e2e8f0 100%);
+    padding: 20px;
+}
+
+.register-card {
+    max-width: 900px;
+    width: 100%;
+}
+
+.bg-dark-luxury {
+    background: linear-gradient(135deg, $dark-bg 0%, #3a3b63 100%);
+}
+
+.luxury-input {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+
+    &:focus-within {
+        border-color: rgba($primary, 0.2);
+        box-shadow: 0 0 0 4px rgba($primary, 0.1);
+    }
+
+    .form-control {
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        &:focus {
+            box-shadow: none;
+            background-color: #fff !important;
+        }
+    }
+    
+    .input-group-text {
+        padding-left: 1.25rem;
+    }
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, $primary, #224abe);
+    border: none;
+    letter-spacing: 1px;
+    transition: transform 0.2s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 15px rgba($primary, 0.3) !important;
+    }
+}
+
+.rounded-5 { border-radius: 25px !important; }
+
+.alert-custom {
+    &.alert-danger { background-color: #fff5f5; color: #e74a3b; }
+    &.alert-success { background-color: #f0fff4; color: #1cc88a; }
+}
