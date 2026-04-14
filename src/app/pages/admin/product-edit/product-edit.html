@@ -72,8 +72,22 @@
       </div>
 
       <div>
-        <label class="form-label">Ảnh sản phẩm</label>
-        <input type="text" class="form-control" formControlName="image" />
+        <label class="form-label">Ảnh hiện tại</label>
+      <div>
+  
+
+  <!-- ảnh hiện tại -->
+  @if (editForm.value.image) {
+    <img [src]="editForm.value.image" class="mb-2 preview-img" />
+  }
+
+  <!-- chọn ảnh mới -->
+  <input 
+    type="file" 
+    class="form-control" 
+    (change)="onFileChange($event)" 
+  />
+</div>
         @if (submitted() && f['image'].errors) {
           <div class="text-danger">
             <div>Ảnh sản phẩm không được để trống</div>

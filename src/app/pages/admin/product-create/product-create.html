@@ -81,7 +81,11 @@
 
       <div>
         <label class="form-label">Ảnh sản phẩm</label>
-        <input type="text" class="form-control" placeholder="Nhập tên ảnh hoặc URL..." formControlName="image" />
+       <input 
+  type="file" 
+  class="form-control" 
+  (change)="onFileChange($event)" 
+/>
         @if (submitted() && f['image'].errors) {
           <div class="text-danger">
             <div>Ảnh sản phẩm không được để trống</div>
