@@ -19,7 +19,7 @@ export class LoginPage implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -34,6 +34,7 @@ export class LoginPage implements OnInit {
     this.submitted.set(true);
 
     if (this.loginForm.invalid) {
+      alert("Vui lòng nhập đúng email và mật khẩu!");
       return;
     }
 
@@ -41,13 +42,25 @@ export class LoginPage implements OnInit {
       .login(this.loginForm.value)
       .then((res: any) => {
         const token = res.data.token;
-        console.log(res.data.token);
 
+        // lưu token
         this.authService.saveToken(token);
+
+        // ✅ alert đăng nhập thành công
+        alert(res.data.messageAlert);
+
+        // về trang chủ
         this.router.navigate(['/']);
       })
       .catch((err: any) => {
-        this.errorMessage.set('Sai email hoặc password');
+
+        // ✅ LẤY messageAlert từ backend
+        if (err.response?.data?.messageAlert) {
+          alert(err.response.data.messageAlert);
+        } else {
+          alert("Đăng nhập thất bại!");
+        }
+
       });
   }
 }

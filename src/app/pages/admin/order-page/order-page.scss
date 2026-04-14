@@ -1,0 +1,56 @@
+/* Reuse luxury variables */
+$primary: #4e73df;
+$bg-light: #f8f9fc;
+
+.rounded-5 { border-radius: 20px !important; }
+
+.custom-table {
+    border-collapse: separate;
+    border-spacing: 0 12px; // Rộng hơn một chút để dễ nhìn mã đơn
+
+    thead th { background-color: $bg-light; }
+
+    tbody tr {
+        background-color: #ffffff;
+        transition: all 0.2s ease-in-out;
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            background-color: #ffffff !important;
+        }
+    }
+
+    td {
+        padding: 1.1rem 0.75rem;
+        border-top: 1px solid #f1f1f4 !important;
+        border-bottom: 1px solid #f1f1f4 !important;
+        
+        &:first-child { border-left: 1px solid #f1f1f4; border-radius: 15px 0 0 15px; padding-left: 1.5rem; }
+        &:last-child { border-right: 1px solid #f1f1f4; border-radius: 0 15px 15px 0; padding-right: 1.5rem; }
+    }
+}
+
+/* Nút hành động kiểu biên lai */
+.btn-action-view {
+    background: #eef2ff;
+    color: $primary;
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    &:hover {
+        background: $primary;
+        color: white;
+        transform: scale(1.1);
+    }
+}
+
+/* Badge Trạng thái tùy chỉnh */
+.badge {
+    &.bg-warning { background-color: #fff4e5 !important; color: #ff9800 !important; }
+    &.bg-success { background-color: #f0fff4 !important; color: #1cc88a !important; }
+    &.bg-danger { background-color: #fff5f5 !important; color: #e74a3b !important; }
+    &.bg-info { background-color: #e0f7fa !important; color: #00bcd4 !important; }
+}

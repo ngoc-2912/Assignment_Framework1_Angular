@@ -1,0 +1,82 @@
+$primary: #4e73df;
+$danger: #e74a3b;
+
+.rounded-5 { border-radius: 20px !important; }
+
+.custom-table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+
+    thead th {
+        background-color: #f8f9fc;
+        border: none;
+    }
+
+    tbody tr {
+        background-color: #ffffff;
+        transition: all 0.2s ease;
+        &:hover {
+            transform: scale(1.005);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+    }
+
+    td {
+        padding: 1.2rem 0.75rem;
+        border-top: 1px solid #f1f1f4 !important;
+        border-bottom: 1px solid #f1f1f4 !important;
+        
+        &:first-child { border-left: 1px solid #f1f1f4; border-radius: 12px 0 0 12px; padding-left: 1.5rem; }
+        &:last-child { border-right: 1px solid #f1f1f4; border-radius: 0 12px 12px 0; padding-right: 1.5rem; }
+    }
+}
+
+/* Category Icon Decor */
+.category-icon-box {
+    width: 40px;
+    height: 40px;
+    background: #eef2ff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+/* Buttons */
+.btn-action-edit, .btn-action-delete {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-action-edit {
+    background: #fff4e5; color: #ff9800;
+    &:hover { background: #ff9800; color: white; transform: rotate(-8deg); }
+}
+
+.btn-action-delete {
+    background: #ffe5e5; color: $danger;
+    &:hover { background: $danger; color: white; transform: rotate(8deg); }
+}
+
+/* Modal UI */
+.icon-box-danger {
+    width: 80px;
+    height: 80px;
+    background: #fff5f5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status-dot-small { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+
+.alert-custom {
+    border-radius: 15px;
+    &.alert-success { background-color: #f0fff4; color: #1cc88a; }
+    &.alert-danger { background-color: #fff5f5; color: #e74a3b; }
+}

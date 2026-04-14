@@ -1,75 +1,79 @@
-/* CARD */
-.profile-luxury {
-  width: 420px;
-  padding: 35px;
-  border-radius: 25px;
-  background: rgba(26, 0, 51, 0.8);
-  backdrop-filter: blur(15px);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-  border: 1px solid rgba(255,255,255,0.08);
-  color: #fff;
+@use "sass:color"; // Thêm dòng này ở đầu file
+
+$primary: #4e73df;
+$dark-bg: #1e1e2d;
+
+.bg-light {
+  background-color: #f8f9fc !important;
 }
 
-/* AVATAR */
-.avatar-wrapper {
-  width: 120px;
-  height: 120px;
-  margin: auto;
+.profile-card-main {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1) !important;
+  }
+}
+
+.avatar-container {
+  img {
+    padding: 6px;
+    // Đã sửa hàm color.adjust để không còn lỗi warning
+    background: linear-gradient(45deg, $primary, color.adjust($primary, $lightness: 20%));
+    box-shadow: 0 0.5rem 1rem rgba($primary, 0.2) !important;
+  }
+}
+
+.status-dot {
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  padding: 4px;
-  background: linear-gradient(135deg, #00f0ff, #ff00ff);
+  bottom: 8px;
+  right: 8px;
 }
 
-.avatar-wrapper img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
+.bg-dark-luxury {
+  background: linear-gradient(135deg, $dark-bg 0%, #3a3b63 100%);
 }
 
-/* INFO */
-.info-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
-.info-item span {
-  color: #bbb;
-}
-
-/* SELECT */
-.select-luxury {
-  background: transparent;
-  border: 1px solid #444;
-  color: #fff;
-  border-radius: 12px;
-  padding: 10px;
-}
-
-.select-luxury:focus {
-  border-color: #8a2be2;
-  box-shadow: 0 0 10px #8a2be2;
-}
-
-/* BUTTON */
-.btn-luxury {
-  background: linear-gradient(135deg, #00f0ff, #ff00ff);
-  border: none;
-  padding: 12px;
+.luxury-input-group {
+  background: #ffffff;
   border-radius: 50px;
-  font-weight: bold;
-  color: #000;
-  transition: 0.3s;
+  overflow: hidden;
+  display: flex;
+
+  .form-select {
+    border-radius: 0;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  .btn-primary {
+    margin: 4px;
+    border-radius: 50px;
+  }
 }
 
-.btn-luxury:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px #ff00ff;
+.rounded-5 {
+  border-radius: 20px !important;
 }
 
-/* LABEL */
-.form-label {
-  color: #bbb;
+.rounded-4 {
+  border-radius: 12px !important;
+}
+
+.alert-custom {
+  &.alert-danger {
+    background-color: #fff5f5;
+    color: #e74a3b;
+  }
+
+  &.alert-success {
+    background-color: #f0fff4;
+    color: #1cc88a;
+  }
 }

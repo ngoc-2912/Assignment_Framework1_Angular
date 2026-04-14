@@ -3,3 +3,79 @@
   height: 60px;
   object-fit: cover;
 }
+/* Tận dụng lại các biến đã thiết lập */
+$primary: #4e73df;
+$danger: #e74a3b;
+
+.rounded-5 { border-radius: 20px !important; }
+
+/* Table Styling */
+.custom-table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+
+    thead th { background-color: #f8f9fc; }
+
+    tbody tr {
+        background-color: #ffffff;
+        transition: all 0.2s ease;
+        &:hover {
+            transform: scale(1.005);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+    }
+
+    td {
+        padding: 1rem 0.75rem;
+        border-top: 1px solid #f1f1f4 !important;
+        border-bottom: 1px solid #f1f1f4 !important;
+        
+        &:first-child { border-left: 1px solid #f1f1f4; border-radius: 12px 0 0 12px; padding-left: 1.5rem; }
+        &:last-child { border-right: 1px solid #f1f1f4; border-radius: 0 12px 12px 0; padding-right: 1.5rem; }
+    }
+}
+
+/* Ảnh sản phẩm trong bảng */
+.product-img-wrapper {
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+/* Buttons */
+.btn-action-edit, .btn-action-delete {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-action-edit {
+    background: #fff4e5; color: #ff9800;
+    &:hover { background: #ff9800; color: white; }
+}
+
+.btn-action-delete {
+    background: #ffe5e5; color: $danger;
+    &:hover { background: $danger; color: white; }
+}
+
+/* Modal UI */
+.icon-box-danger {
+    width: 80px;
+    height: 80px;
+    background: #fff5f5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status-dot-small { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
