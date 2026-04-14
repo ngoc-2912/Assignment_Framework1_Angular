@@ -1,59 +1,61 @@
 .sidebar {
-  width: 250px;
-  min-height: 150vh;
-  background: linear-gradient(180deg, #1a0033, #0f0120);
-  padding: 20px;
-  position: relative;
-  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+    width: 280px;
+    height: 100vh;
+    background: #1e1e2d;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    z-index: 100;
 }
 
-/* Title */
-.sidebar h4 {
-  font-weight: 700;
-  letter-spacing: 1px;
-  background: linear-gradient(90deg, #00d4ff, #a100ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.logo-icon {
+    font-size: 1.5rem;
 }
 
-/* Link */
-.sidebar .nav-link {
-  color: #bbb;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 15px;
-  border-radius: 10px;
-  transition: all 0.3s ease;
+.logo-text {
+    letter-spacing: 1px;
+    font-size: 1.25rem;
 }
 
-/* Icon */
-.sidebar .nav-link i {
-  font-size: 18px;
-  transition: 0.3s;
+.custom-link {
+    color: #a2a3b7 !important;
+    padding: 12px 20px;
+    margin-bottom: 8px;
+    border-radius: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
 }
 
-/* Hover */
-.sidebar .nav-link:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
-  transform: translateX(5px);
+.custom-link i {
+    margin-right: 12px;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
 }
 
-/* Active */
-.sidebar .nav-link.active {
-  background: linear-gradient(90deg, #6a00ff, #00d4ff);
-  color: #fff;
-  box-shadow: 0 5px 15px rgba(106, 0, 255, 0.5);
+.custom-link:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff !important;
 }
 
-/* Active icon */
-.sidebar .nav-link.active i {
-  transform: scale(1.2);
+.custom-link.active {
+    background: linear-gradient(45deg, #4e73df, #224abe) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(78, 115, 223, 0.3);
 }
 
-/* Divider (optional) */
-.sidebar hr {
-  border-color: rgba(255,255,255,0.1);
-  margin: 15px 0;
+.custom-link.active i {
+    color: #ffffff;
+}
+
+.sidebar-footer {
+    opacity: 0.8;
+}
+
+.main-content {
+    margin-left: 230px;
+    padding: 20px;
+    width: calc(100% - 280px);
+    min-height: 100vh;
+    background-color: #f8f9fc;
 }
