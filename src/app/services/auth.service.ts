@@ -15,6 +15,14 @@ export class AuthService {
         });
     }
 
+    register(form: any) {
+        return axios.post(API_URL + API_ENDPOINT.auth.register, {
+            full_name: form.full_name.trim(),
+            email: form.email.trim(),
+            password: form.password,
+        });
+    }
+
     saveToken(token: string) {
         localStorage.setItem('token', token);
     }
