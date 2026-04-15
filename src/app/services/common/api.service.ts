@@ -14,8 +14,13 @@ export class BaseApi {
 
     // interceptor request
     this.axios.interceptors.request.use((config) => {
+  let token = null;
 
-      const token = localStorage.getItem("token");
+ 
+  if (typeof window !== 'undefined') {
+    token = localStorage.getItem("token");
+  }
+      
 
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;

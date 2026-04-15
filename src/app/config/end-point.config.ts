@@ -1,5 +1,5 @@
 import { register } from "module";
-
+const BASE_URL = 'http://localhost:3000';
 export const API_ENDPOINT = {
     auth: {
         login: '/users/login',
@@ -23,10 +23,13 @@ export const API_ENDPOINT = {
         list: '/orders/list',
         detail: '/orders',
         update: '/orders',
+        myOrders: '/orders/my-orders'
     },
     user: {
         list: '/users/list',
         detail: '/users',
         update: '/users',
+         profile: '/users/profile',
+    changePassword: '/users/change-password'
     }
 }

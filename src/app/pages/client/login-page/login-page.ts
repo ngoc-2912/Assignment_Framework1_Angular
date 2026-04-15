@@ -45,12 +45,13 @@ export class LoginPage implements OnInit {
     this.authService
       .login(this.loginForm.value)
       .then((res: any) => {
-        const token = res.data.token;
+       const token = res?.data?.token || res?.token;
 
         // lưu token
         this.authService.saveToken(token);
 
-        this.showMessage('Đăng nhập thành công!', 'success');
+        // ✅ alert đăng nhập thành công
+       alert(res?.data?.messageAlert || res?.messageAlert || "Đăng nhập thành công");
 
         // về trang chủ
         setTimeout(() => {
