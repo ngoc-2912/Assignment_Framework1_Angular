@@ -45,10 +45,39 @@
           </span>
         </a>
 
-        <div class="d-flex gap-2">
-          <a class="btn btn-outline-secondary" routerLink="/login">Đăng nhập</a>
-          <a class="btn btn-dark" routerLink="/register">Đăng ký</a>
-        </div>
+        @if (isLoggedIn()) {
+          <div class="dropdown">
+            <button
+              class="btn btn-outline-dark dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Chào {{ fullName() || 'bạn' }}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <a class="dropdown-item" routerLink="/profile">Thông tin tài khoản</a>
+              </li>
+              @if (isAdmin()) {
+                <li>
+                  <a class="dropdown-item" routerLink="/admin">Trang admin</a>
+                </li>
+              }
+              <li><hr class="dropdown-divider" /></li>
+              <li>
+                <button class="dropdown-item text-danger" type="button" (click)="logout()">
+                  Đăng xuất
+                </button>
+              </li>
+            </ul>
+          </div>
+        } @else {
+          <div class="d-flex gap-2">
+            <a class="btn btn-outline-secondary" routerLink="/login">Đăng nhập</a>
+            <a class="btn btn-dark" routerLink="/register">Đăng ký</a>
+          </div>
+        }
       </div>
     </div>
   </div>

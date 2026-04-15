@@ -48,11 +48,20 @@
           }
         </div>
 
-        @if (errorMessage()) {
-          <div class="text-danger mb-2">
-            {{ errorMessage() }}
+        @if (message() && messageType()) {
+          <div
+            class="alert alert-custom alert-{{
+              messageType()
+            }} alert-dismissible fade show border-0 shadow-sm mb-4 rounded-4"
+          >
+            <div class="d-flex align-items-center">
+              <i class="bi bi-info-circle-fill me-2 fs-5"></i>
+              <span class="fw-medium">{{ message() }}</span>
+            </div>
+            <button type="button" class="btn-close" (click)="message.set('')"></button>
           </div>
         }
+        
         <button class="btn btn-dark w-100" type="button" (click)="login()">Đăng nhập</button>
       </form>
 

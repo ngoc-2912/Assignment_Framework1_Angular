@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { IUser } from '../../../interfaces/user.interface';
 import { UserService } from '../../../services/user.service';
 
@@ -12,16 +12,17 @@ import { UserService } from '../../../services/user.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserDetail implements OnInit {
-  private route = inject(ActivatedRoute);
-  private userService = inject(UserService);
-
   user = signal<IUser | null>(null);
   selectedActive = signal('1');
   message = signal('');
   messageType = signal('success');
   protected id = 0;
 
-  constructor() {
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private userService: UserService
+  ) {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
   }
 
@@ -35,7 +36,7 @@ export class UserDetail implements OnInit {
       this.user.set(res.data);
       this.selectedActive.set(res.data.active);
     } catch {
-      this.showMessage('Không thể tải chi tiết người dùng!', 'danger');
+      this.router.navigate(['/not-found'], { state: { message: 'Tài khoản không tồn tại!', linkUrl: '/admin/users' } });
     }
   };
 

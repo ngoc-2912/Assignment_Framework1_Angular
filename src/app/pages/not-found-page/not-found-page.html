@@ -1,0 +1,19 @@
+<section class="not-found-shell d-flex align-items-center justify-content-center">
+  <div class="text-center px-3 px-md-4 py-5">
+    <div class="display-1 fw-bold text-dark mb-2">404</div>
+    <h1 class="h3 fw-bold mb-3">Không tìm thấy trang</h1>
+    <p class="text-secondary mb-4 mx-auto not-found-text">
+        @if (message) {
+          {{ message }}
+        } @else {
+           Trang bạn đang tìm không tồn tại hoặc đã bị chuyển đi.
+        }
+      <!-- {{ message || 'Trang bạn đang tìm không tồn tại hoặc đã bị chuyển đi.' }} -->
+    </p>
+
+    <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
+      <a routerLink="/{{ linkUrl }}" class="btn btn-dark px-4">Quay lại</a>
+      <a routerLink="/" class="btn btn-dark px-4">Về trang chủ</a>
+    </div>
+  </div>
+</section>

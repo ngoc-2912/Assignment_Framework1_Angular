@@ -5,6 +5,7 @@ export const API_ENDPOINT = {
         login: '/users/login',
         register: '/users/register',
         registerAdmin: '/users/register-admin',
+        checkEmail: '/users/check-email',
     },
     category: {
         list: '/categories/list',

@@ -54,8 +54,7 @@ export class CategoryEdit {
         status: this.category?.status,
       });
     } catch {
-      this.message.set('Không thể tải thông tin danh mục!');
-      this.messageType.set('danger');
+      this.router.navigate(['/not-found'], { state: { message: 'Danh mục không tồn tại!', linkUrl: '/admin/categories' } });
     }
   }
 

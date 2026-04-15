@@ -77,8 +77,7 @@ export class ProductEdit implements OnInit {
       });
 
     } catch {
-      this.message.set('Không thể tải thông tin sản phẩm!');
-      this.messageType.set('danger');
+      this.router.navigate(['/not-found'], { state: { message: 'Sản phẩm không tồn tại!', linkUrl: '/admin/products' } });
     }
   }
 

@@ -6,32 +6,92 @@
         Trở thành thành viên để nhận giá ưu đãi và cập nhật sản phẩm mới sớm nhất.
       </p>
 
-      <form [formGroup]="registerForm" (ngSubmit)="register()">
+      <form [formGroup]="registerForm">
         <div class="mb-3">
           <label class="form-label">Họ và tên</label>
-          <input class="form-control" formControlName="full_name" type="text" placeholder="Vui lòng nhập vào tên."/>
+          <input
+            class="form-control"
+            formControlName="full_name"
+            type="text"
+            placeholder="Vui lòng nhập vào tên."
+          />
+          @if (submitted() && f['full_name'].errors) {
+            <div class="text-danger">
+              @if (f['full_name'].errors['required']) {
+                <div>Họ và tên không được để trống</div>
+              }
+            </div>
+          }
         </div>
 
         <div class="mb-3">
           <label class="form-label">Email</label>
-          <input class="form-control" formControlName="email" type="email" placeholder="Vui lòng nhập vào email."/>
+          <input
+            class="form-control"
+            formControlName="email"
+            type="email"
+            placeholder="Vui lòng nhập vào email."
+          />
+          @if (submitted() && f['email'].errors) {
+            <div class="text-danger">
+              @if (f['email'].errors['required']) {
+                <div>Email không được để trống</div>
+              }
+              @if (f['email'].errors['email']) {
+                <div>Email không hợp lệ</div>
+              }
+              @if (f['email'].errors['duplicated']) {
+                <div>Email đã tồn tại!</div>
+              }
+            </div>
+          }
         </div>
 
         <div class="mb-3">
           <label class="form-label">Mật khẩu</label>
-          <input class="form-control" formControlName="password" type="password" placeholder="Vui lòng nhập vào mật khẩu."/>
+          <input
+            class="form-control"
+            formControlName="password"
+            type="password"
+            placeholder="Vui lòng nhập vào mật khẩu."
+          />
+          @if (submitted() && f['password'].errors) {
+            <div class="text-danger">
+              @if (f['password'].errors['required']) {
+                <div>Mật khẩu không được để trống</div>
+              }
+              @if (f['password'].errors['minlength']) {
+                <div>Mật khẩu phải có ít nhất 6 ký tự</div>
+              }
+            </div>
+          }
         </div>
         <div class="form-check mb-4">
-          <input id="agree" class="form-check-input" type="checkbox" required/>
+          <input id="agree" class="form-check-input" type="checkbox" formControlName="agree" />
           <label for="agree" class="form-check-label"
             >Tôi đồng ý với điều khoản sử dụng và chính sách bảo mật.</label
           >
+          @if (submitted() && f['agree'].errors) {
+            <div class="text-danger d-block mt-1">Bạn phải chọn mục này để đăng ký.</div>
+          }
         </div>
 
-        <button class="btn btn-dark w-100" type="submit">Đăng ký</button>
-      </form>
+        @if (message() && messageType()) {
+          <div
+            class="alert alert-custom alert-{{
+              messageType()
+            }} alert-dismissible fade show border-0 shadow-sm mb-4 rounded-4"
+          >
+            <div class="d-flex align-items-center">
+              <i class="bi bi-info-circle-fill me-2 fs-5"></i>
+              <span class="fw-medium">{{ message() }}</span>
+            </div>
+            <button type="button" class="btn-close" (click)="message.set('')"></button>
+          </div>
+        }
 
-      <p class="text-danger mt-3">{{ errorMessage() }}</p>
+        <button class="btn btn-dark w-100" type="button" (click)="register()">Đăng ký</button>
+      </form>
 
       <p class="mt-4 mb-0 text-secondary">
         Đã có tài khoản?

@@ -12,18 +12,23 @@ import { RouterLink, Router } from '@angular/router';
 })
 export class LoginPage implements OnInit {
   submitted = signal(false);
-  errorMessage = signal('');
+  message = signal('');
+  messageType = signal('success');
   loginForm!: FormGroup;
+  private prefillEmail = '';
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-  ) { }
+  ) {
+    const nav = this.router.getCurrentNavigation();
+    this.prefillEmail = nav?.extras?.state?.['email'] ?? '';
+  }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: [this.prefillEmail, [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
@@ -34,7 +39,6 @@ export class LoginPage implements OnInit {
     this.submitted.set(true);
 
     if (this.loginForm.invalid) {
-      alert("Vui lòng nhập đúng email và mật khẩu!");
       return;
     }
 
@@ -46,21 +50,27 @@ export class LoginPage implements OnInit {
         // lưu token
         this.authService.saveToken(token);
 
-        // ✅ alert đăng nhập thành công
-        alert(res.data.messageAlert);
+        this.showMessage('Đăng nhập thành công!', 'success');
 
         // về trang chủ
-        this.router.navigate(['/']);
+        setTimeout(() => {
+          this.router.navigate(['/']);
+        }, 3000);
       })
       .catch((err: any) => {
-
-        // ✅ LẤY messageAlert từ backend
         if (err.response?.data?.messageAlert) {
-          alert(err.response.data.messageAlert);
+          this.showMessage(err.response.data.messageAlert, 'danger');
         } else {
-          alert("Đăng nhập thất bại!");
+          this.showMessage('Đăng nhập thất bại!', 'danger');
         }
-
       });
+  }
+  showMessage(msg: string, type: 'success' | 'danger') {
+    this.message.set(msg);
+    this.messageType.set(type);
+    setTimeout(() => {
+      this.message.set('');
+      this.messageType.set('');
+    }, 5000);
   }
 }

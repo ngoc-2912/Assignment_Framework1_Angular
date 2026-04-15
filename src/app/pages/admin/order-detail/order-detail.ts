@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IOrder } from '../../../interfaces/order.interface';
 import { OrderService } from '../../../services/order.service';
 import { DatePipe } from '@angular/common';
@@ -12,15 +12,17 @@ import { DatePipe } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderDetail implements OnInit {
-  private route = inject(ActivatedRoute);
-  private orderService = inject(OrderService);
   order = signal<IOrder | null>(null);
   selectedStatus = signal('0');
   message = signal('');
   messageType = signal('success');
   protected id = 0;
 
-  constructor() {
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private orderService: OrderService,
+  ) {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
   }
 
@@ -34,8 +36,9 @@ export class OrderDetail implements OnInit {
       this.order.set(result.data);
       this.selectedStatus.set(result.data.status);
     } catch {
-      this.message.set('Không thể tải chi tiết đơn hàng!');
-      this.messageType.set('danger');
+      this.router.navigate(['/not-found'], {
+        state: { message: 'Đơn hàng không tồn tại!', linkUrl: '/admin/orders' },
+      });
     }
   };
 
