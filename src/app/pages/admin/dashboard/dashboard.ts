@@ -1,7 +1,9 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Inject, PLATFORM_ID } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { CurrencyPipe, isPlatformBrowser } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
+import { UserService } from '../../../services/user.service';
+import { OrderService } from '../../../services/order.service';
+import { ProductService } from '../../../services/product.service';
 
 Chart.register(...registerables);
 
@@ -30,7 +32,9 @@ export class Dashboard implements OnInit, AfterViewInit {
   statusChart: any;
 
   constructor(
-    private http: HttpClient,
+    private userService: UserService,
+    private orderService: OrderService,
+    private productService: ProductService,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -56,29 +60,45 @@ export class Dashboard implements OnInit, AfterViewInit {
   }
 
   loadUsers() {
-    this.http.get<any>('http://localhost:3000/users/list')
-      .subscribe(res => this.totalUsers = res.data.length);
+    this.userService.list()
+      .then((res: any) => {
+        this.totalUsers = Array.isArray(res?.data) ? res.data.length : 0;
+      })
+      .catch(err => {
+        console.error('Load users error:', err);
+        this.totalUsers = 0;
+      });
   }
 
   loadProducts() {
-    this.http.get<any>('http://localhost:3000/products/list')
-      .subscribe(res => this.totalProducts = res.data.length);
+    this.productService.list()
+      .then((res: any) => {
+        this.totalProducts = Array.isArray(res?.data) ? res.data.length : 0;
+      })
+      .catch(err => {
+        console.error('Load products error:', err);
+        this.totalProducts = 0;
+      });
   }
 
   loadOrders() {
-    this.http.get<any>('http://localhost:3000/orders/list')
-      .subscribe({
-        next: (res) => {
-          const raw = Array.isArray(res?.data) ? res.data : [];
-          this.allOrders = raw;
-          this.orders = raw.filter((o: any) => Number(o?.status) === 2);
-          this.totalOrders = this.allOrders.length;
-          this.totalRevenue = this.orders.reduce(
-            (sum: number, o: any) => sum + Number(o?.total_price || 0), 0
-          );
-          this.tryRenderCharts();
-        },
-        error: (err) => console.error("LOAD ORDERS ERROR:", err)
+    this.orderService.list()
+      .then((res: any) => {
+        const raw = Array.isArray(res?.data) ? res.data : [];
+        this.allOrders = raw;
+        this.orders = raw.filter((o: any) => Number(o?.status) === 2);
+        this.totalOrders = this.allOrders.length;
+        this.totalRevenue = this.orders.reduce(
+          (sum: number, o: any) => sum + Number(o?.total_price || 0), 0
+        );
+        this.tryRenderCharts();
+      })
+      .catch(err => {
+        console.error('Load orders error:', err);
+        this.allOrders = [];
+        this.orders = [];
+        this.totalOrders = 0;
+        this.totalRevenue = 0;
       });
   }
 
