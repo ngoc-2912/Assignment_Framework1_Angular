@@ -18,7 +18,7 @@ export const routes: Routes = [
 					import('./pages/client/shop-page/shop-page').then(m => m.ShopPage),
 			},
 			{
-				path: 'shop/:slug',
+				path: 'shop/:name',
 				loadComponent: () =>
 					import('./pages/client/product-detail-page/product-detail-page')
 						.then(m => m.ProductDetailPage),

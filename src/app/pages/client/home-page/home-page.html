@@ -73,7 +73,7 @@
     @for (item of featuredProducts(); track item.id) {
       <div class="col-sm-6 col-lg-3">
         <article class="product-card card border-0 h-100 shadow-sm">
-          <a [routerLink]="['/shop', item.slug]" class="image-wrap">
+          <a [routerLink]="['/shop', item.name]" class="image-wrap">
             <img
               [src]="item.image"
               [alt]="item.name"
@@ -87,7 +87,7 @@
             </p>
             
             <h3 class="h6 fw-bold">
-              <a class="link-dark text-decoration-none" [routerLink]="['/shop', item.slug]">
+              <a class="link-dark text-decoration-none" [routerLink]="['/shop', item.name]">
                 {{ item.name }}
               </a>
             </h3>
