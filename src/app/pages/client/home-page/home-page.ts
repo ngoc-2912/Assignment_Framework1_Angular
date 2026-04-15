@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../../services/product.service'; 
 import { IProduct } from '../../../entities/product';
@@ -15,25 +15,24 @@ import { CommonModule } from '@angular/common';
 export class HomePage implements OnInit {
   private productService = inject(ProductService);
   
-  // Sử dụng Signal để lưu danh sách sản phẩm
   products = signal<IProduct[]>([]);
+
+  // Tạo một signal mới chỉ chứa tối đa 4 sản phẩm
+  featuredProducts = computed(() => {
+    return this.products().slice(0, 4); // Cắt mảng lấy 4 phần tử đầu tiên
+  });
 
   ngOnInit(): void {
     this.loadProducts();
   }
 
-  // Chuyển sang async/await vì ProductService của bạn dùng Axios (Promise)
   async loadProducts() {
     try {
-      // Gọi API bằng await
       const res = await this.productService.list();
-      
-      // Kiểm tra dữ liệu và cập nhật signal
       if (res && res.data) {
         this.products.set(res.data);
       }
     } catch (err: any) {
-      // Định nghĩa kiểu :any cho err để tránh lỗi TS7006
       console.error('Lỗi khi lấy danh sách sản phẩm:', err);
     }
   }
