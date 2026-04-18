@@ -19,6 +19,12 @@ export interface IOrder {
   status: string;
   createdAt: string;
   updatedAt: string;
+
+  payment_method: string;
+  phone: string;
+  address: string;
+  note: string;
+
   User: IOrderUser;
   OrderDetails: IOrderDetailItem[];
 }
