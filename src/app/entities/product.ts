@@ -1,3 +1,5 @@
+import type { IVariant } from '../interfaces/variant.interface';
+
 export interface IProductCategory {
     id: number;
     name: string;
@@ -15,4 +17,5 @@ export interface IProduct {
     createdAt: string;
     updatedAt: string;
     Category?: IProductCategory;
+    variants?: IVariant[];
 }

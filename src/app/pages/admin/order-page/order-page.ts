@@ -2,11 +2,10 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IOrder } from '../../../interfaces/order.interface';
 import { OrderService } from '../../../services/order.service';
-import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-order-page',
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink],
   templateUrl: './order-page.html',
   styleUrl: './order-page.scss'
 })

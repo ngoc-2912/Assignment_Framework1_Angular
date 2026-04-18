@@ -1,4 +1,3 @@
-import { register } from "module";
 const BASE_URL = 'http://localhost:3000';
 export const API_ENDPOINT = {
     auth: {
@@ -18,6 +17,12 @@ export const API_ENDPOINT = {
         add: '/products/add',
         delete: '/products',
         edit: '/products',
+    },
+    variant: {
+        list: '/variants/list',
+        add: '/variants/add',
+        edit: '/variants',
+        delete: '/variants',
     },
     order: {
         list: '/orders/list',

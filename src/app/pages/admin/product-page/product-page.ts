@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router'; 
 import { IProduct } from '../../../entities/product';
@@ -6,7 +5,7 @@ import { ProductService } from '../../../services/product.service';
 
 @Component({
   selector: 'app-product-page',
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink],
   templateUrl: './product-page.html',
   styleUrl: './product-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

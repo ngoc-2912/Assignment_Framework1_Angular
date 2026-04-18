@@ -1,106 +1,364 @@
-<div class="container py-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <p class="mb-0">Quản lý sản phẩm > <strong>Sửa sản phẩm</strong></p>
-    <a class="btn btn-outline-secondary" routerLink="/admin/products">Quay lại</a>
+<div class="page-shell">
+  <div class="hero-panel">
+    <div>
+      <p class="eyebrow mb-2">Quản lý sản phẩm</p>
+      <h1 class="page-title mb-2">Cập nhật sản phẩm</h1>
+      <p class="page-subtitle mb-0">
+        Chỉnh sửa thông tin chính, ảnh đại diện và toàn bộ biến thể của sản phẩm.
+      </p>
+    </div>
+
+    <a class="btn btn-ghost rounded-pill px-4" routerLink="/admin/products">
+      <i class="bi bi-arrow-left me-2"></i>Quay lại
+    </a>
   </div>
 
-  @if (message() && messageType()) {
-    <div class="alert alert-{{ messageType() }} alert-dismissible fade show">
-      {{ message() }}
+  @if (message()) {
+    <div
+      class="alert alert-custom alert-{{ messageType() }} alert-dismissible fade show border-0 shadow-sm mb-4 rounded-4"
+    >
+      <div class="d-flex align-items-center">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        <span>{{ message() }}</span>
+      </div>
       <button type="button" class="btn-close" (click)="message.set('')"></button>
     </div>
   }
 
-  <div class="form border rounded p-4 bg-light mx-auto">
-    <h2 class="text-center mb-4">Sửa sản phẩm</h2>
-
-    <form class="d-flex flex-column gap-3" [formGroup]="editForm">
-      <div>
-        <label class="form-label">Tên sản phẩm</label>
-        <input type="text" class="form-control" formControlName="name" />
-        @if (submitted() && f['name'].errors) {
-          <div class="text-danger">
-            @if (f['name'].errors['required']) {
-              <div>Tên sản phẩm không được để trống</div>
-            }
-            @if (f['name'].errors['minlength']) {
-              <div>Tên sản phẩm phải có ít nhất 3 ký tự</div>
-            }
-          </div>
-        }
-        @if (nameError()) {
-          <div class="text-danger">{{ nameError() }}</div>
-        }
+  <form class="form-grid" [formGroup]="editForm">
+    <section class="surface surface-main">
+      <div class="surface-header">
+        <div>
+          <p class="section-kicker">Thông tin cơ bản</p>
+          <h2>Chi tiết sản phẩm</h2>
+        </div>
+        <span class="section-pill">ID #{{ id }}</span>
       </div>
 
-      <div>
-        <label class="form-label">Giá</label>
-        <input type="number" class="form-control" formControlName="price" />
-        @if (submitted() && f['price'].errors) {
-          <div class="text-danger">
-            @if (f['price'].errors['required']) {
-              <div>Giá không được để trống</div>
-            }
-            @if (f['price'].errors['min']) {
-              <div>Giá phải lớn hơn 0</div>
-            }
-          </div>
-        }
-      </div>
-
-      <div>
-        <label class="form-label">Danh mục</label>
-        <select class="form-select" formControlName="category_id">
-          <option value="">Chọn danh mục</option>
-          @for (item of categories(); track item.id) {
-            <option [value]="item.id">{{ item.name }}</option>
+      <div class="field-grid">
+        <div class="field field-span-2">
+          <label class="form-label">Tên sản phẩm</label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            formControlName="name"
+            placeholder="Nhập tên sản phẩm..."
+          />
+          @if (submitted() && f['name'].errors) {
+            <div class="invalid-feedback-list">
+              @if (f['name'].errors['required']) {
+                <div>Tên sản phẩm không được để trống</div>
+              }
+              @if (f['name'].errors['minlength']) {
+                <div>Tên sản phẩm phải có ít nhất 3 ký tự</div>
+              }
+            </div>
           }
-        </select>
-        @if (submitted() && f['category_id'].errors) {
-          <div class="text-danger">
-            <div>Danh mục không được để trống</div>
+          @if (nameError()) {
+            <div class="invalid-feedback-list">{{ nameError() }}</div>
+          }
+        </div>
+
+        <div class="field">
+          <label class="form-label">Giá gốc</label>
+          <input
+            type="number"
+            class="form-control form-control-lg"
+            formControlName="price"
+            placeholder="Ví dụ: 120000"
+          />
+          @if (submitted() && f['price'].errors) {
+            <div class="invalid-feedback-list">
+              @if (f['price'].errors['required']) {
+                <div>Giá không được để trống</div>
+              }
+              @if (f['price'].errors['min']) {
+                <div>Giá phải lớn hơn 0</div>
+              }
+              @if (f['price'].errors['pattern']) {
+                <div>Giá phải là số nguyên</div>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="field">
+          <label class="form-label">Danh mục</label>
+          <select class="form-select form-select-lg" formControlName="category_id">
+            <option value="">Chọn danh mục</option>
+            @for (item of categories(); track item.id) {
+              <option [value]="item.id">{{ item.name }}</option>
+            }
+          </select>
+          @if (submitted() && f['category_id'].errors) {
+            <div class="invalid-feedback-list">
+              <div>Danh mục không được để trống</div>
+            </div>
+          }
+          @if (categoryError()) {
+            <div class="invalid-feedback-list">{{ categoryError() }}</div>
+          }
+        </div>
+
+        <div class="field">
+          <label class="form-label">Trạng thái</label>
+          <select class="form-select form-select-lg" formControlName="status">
+            <option value="1">Hiển thị</option>
+            <option value="0">Ẩn</option>
+          </select>
+        </div>
+
+        <div class="field field-span-2">
+          <label class="form-label">Ảnh sản phẩm</label>
+          <input
+            type="file"
+            class="form-control form-control-lg"
+            accept="image/*"
+            (change)="onFileChange($event)"
+          />
+          <div class="upload-note mt-2">Ảnh mới sẽ thay thế ảnh hiện tại khi bạn lưu.</div>
+        </div>
+
+        <div class="field field-span-2">
+          <label class="form-label">Mô tả</label>
+          <textarea
+            rows="5"
+            class="form-control"
+            formControlName="description"
+            placeholder="Mô tả ngắn về sản phẩm..."
+          ></textarea>
+        </div>
+      </div>
+    </section>
+
+    <aside class="surface preview-panel">
+      <p class="section-kicker">Xem trước</p>
+      <div class="preview-card">
+        @if (productImagePreview()) {
+          <img [src]="getImageUrl(productImagePreview())" alt="Ảnh xem trước sản phẩm" />
+        } @else {
+          <div class="preview-placeholder">
+            <i class="bi bi-image fs-1"></i>
+            <span>Chưa có ảnh</span>
           </div>
         }
       </div>
 
-      <div>
-        <label class="form-label">Trạng thái</label>
-        <select class="form-select" formControlName="status">
-          <option value="1">Hiển thị</option>
-          <option value="0">Ẩn</option>
-        </select>
+      <div class="preview-list">
+        <div>
+          <span>Danh mục</span>
+          <strong>{{ categories().length ? categories().length + ' lựa chọn' : 'Đang tải' }}</strong>
+        </div>
+        <div>
+          <span>Biến thể</span>
+          <strong>{{ variantControls.length }} mục</strong>
+        </div>
+        <div>
+          <span>Trạng thái</span>
+          <strong>{{ f['status'].value === '1' ? 'Hiển thị' : 'Ẩn' }}</strong>
+        </div>
+      </div>
+    </aside>
+
+    <section class="surface variants-panel">
+      <div class="surface-header">
+        <div>
+          <p class="section-kicker">Biến thể sản phẩm</p>
+          <h2>CRUD biến thể</h2>
+        </div>
+        <button type="button" class="btn btn-dark rounded-pill px-4" (click)="addVariant()">
+          <i class="bi bi-plus-lg me-2"></i>Thêm biến thể
+        </button>
       </div>
 
-      <div>
-        <label class="form-label">Ảnh hiện tại</label>
-      <div>
-  
+      @if (variantError()) {
+        <div class="alert alert-warning border-0 rounded-3 mb-3">
+          <i class="bi bi-exclamation-triangle me-2"></i>{{ variantError() }}
+        </div>
+      }
 
-  <!-- ảnh hiện tại -->
-  @if (editForm.value.image) {
-    <img [src]="editForm.value.image" class="mb-2 preview-img" />
+      <div formArrayName="variants" class="variant-stack">
+        @if (variantControls.length === 0) {
+          <div class="empty-state">
+            <i class="bi bi-diagram-3 fs-1"></i>
+            <h3>Chưa có biến thể nào</h3>
+            <p>Bạn có thể thêm mới, chỉnh sửa hoặc xóa từng biến thể ngay tại đây.</p>
+            <button
+              type="button"
+              class="btn btn-outline-dark rounded-pill px-4"
+              (click)="addVariant()"
+            >
+              <i class="bi bi-plus-lg me-2"></i>Thêm biến thể đầu tiên
+            </button>
+          </div>
+        } @else {
+          @for (variant of variantControls; track variant; let i = $index) {
+            <div class="variant-card" [formGroupName]="i">
+              <div class="variant-card-header">
+                <div>
+                  <p class="section-kicker mb-1">Biến thể #{{ i + 1 }}</p>
+                  <h3 class="mb-0">Thiết lập thông tin biến thể</h3>
+                </div>
+
+                <div class="d-flex gap-2">
+                  <button
+                    type="button"
+                    class="btn btn-outline-success rounded-pill"
+                    (click)="saveVariant(i)"
+                    [disabled]="isSavingVariant()[variant.get('uid')?.value]"
+                  >
+                    @if (isSavingVariant()[variant.get('uid')?.value]) {
+                      <span>Đang lưu...</span>
+                    } @else {
+                      <i class="bi bi-check-lg me-1"></i>Lưu
+                    }
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger rounded-pill"
+                    (click)="openVariantDeleteModal(i)"
+                  >
+                    Xóa
+                  </button>
+                </div>
+              </div>
+
+              <div class="variant-grid">
+                <div>
+                  <label class="form-label">Tên biến thể</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Ví dụ: Màu đen / Size L"
+                    formControlName="name"
+                  />
+                  @if (submitted() && variant.get('name')?.errors) {
+                    <div class="invalid-feedback-list">
+                      @if (variant.get('name')?.errors?.['required']) {
+                        <div>Tên biến thể không được để trống</div>
+                      }
+                      @if (variant.get('name')?.errors?.['minlength']) {
+                        <div>Tên biến thể phải có ít nhất 2 ký tự</div>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <div>
+                  <label class="form-label">SKU</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Ví dụ: PRD-BLK-L"
+                    formControlName="sku"
+                  />
+                </div>
+
+                <div>
+                  <label class="form-label">Giá biến thể</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    placeholder="Ví dụ: 135000"
+                    formControlName="price"
+                  />
+                  @if (submitted() && variant.get('price')?.errors) {
+                    <div class="invalid-feedback-list">
+                      @if (variant.get('price')?.errors?.['required']) {
+                        <div>Giá biến thể không được để trống</div>
+                      }
+                      @if (variant.get('price')?.errors?.['pattern']) {
+                        <div>Giá biến thể phải là số nguyên</div>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <div class="field field-span-2">
+                  <label class="form-label">Ảnh biến thể</label>
+                  <input
+                    type="file"
+                    class="form-control"
+                    accept="image/*"
+                    (change)="onVariantImageChange(i, $event)"
+                  />
+                  @if (variant.get('imagePreview')?.value) {
+                    <div class="variant-image-preview mt-2">
+                      <img
+                        [src]="getImageUrl(variant.get('imagePreview')?.value)"
+                        alt="Ảnh biến thể"
+                      />
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </section>
+
+    <div class="submit-bar">
+      <a class="btn btn-light rounded-pill px-4" routerLink="/admin/products">Hủy bỏ</a>
+      <button
+        type="button"
+        class="btn btn-primary rounded-pill px-4"
+        (click)="editProduct()"
+        [disabled]="isSaving()"
+      >
+        @if (isSaving()) {
+          <span>Đang lưu...</span>
+        } @else {
+          <span>Cập nhật sản phẩm</span>
+        }
+      </button>
+    </div>
+  </form>
+
+  @if (showVariantModal()) {
+    <div
+      class="modal show d-block"
+      style="background: rgba(30, 30, 45, 0.6); backdrop-filter: blur(4px)"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-5">
+          <div class="modal-body p-5 text-center">
+            <div class="icon-box-danger mb-4 mx-auto">
+              <i class="bi bi-exclamation-triangle-fill text-danger fs-1"></i>
+            </div>
+            <h4 class="fw-bold text-dark mb-2">Xác nhận xóa?</h4>
+            <p class="text-secondary mb-4">
+              Bạn có chắc muốn xóa biến thể
+              <br />
+              <strong>{{ selectedVariantName() || 'này' }}</strong>
+              ? Hành động này không thể hoàn tác.
+            </p>
+            <div class="d-flex gap-2 justify-content-center">
+              <button
+                type="button"
+                class="btn btn-light rounded-pill px-4 fw-medium"
+                (click)="cancelVariantDelete()"
+                [disabled]="isDeletingVariant()"
+              >
+                Hủy bỏ
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger rounded-pill px-4 fw-medium"
+                (click)="confirmVariantDelete()"
+                [disabled]="isDeletingVariant()"
+              >
+                @if (isDeletingVariant()) {
+                  <span>Đang xóa...</span>
+                } @else {
+                  <span>Xóa ngay</span>
+                }
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   }
-
-  <!-- chọn ảnh mới -->
-  <input 
-    type="file" 
-    class="form-control" 
-    (change)="onFileChange($event)" 
-  />
-</div>
-        @if (submitted() && f['image'].errors) {
-          <div class="text-danger">
-            <div>Ảnh sản phẩm không được để trống</div>
-          </div>
-        }
-      </div>
-
-      <div>
-        <label class="form-label">Mô tả</label>
-        <textarea rows="4" class="form-control" formControlName="description"></textarea>
-      </div>
-
-      <button type="button" class="btn btn-primary mt-3" (click)="editProduct()">Cập nhật</button>
-    </form>
-  </div>
 </div>

@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IUser } from '../../../interfaces/user.interface';
@@ -6,7 +5,7 @@ import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-user-page',
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink],
   templateUrl: './user-page.html',
   styleUrl: './user-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,12 +1,11 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { CategoryService } from '../../../services/category.service';
 import { ICategory } from '../../../interfaces/category.interface';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-category-page',
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink],
   templateUrl: './category-page.html',
   styleUrl: './category-page.scss',
 })

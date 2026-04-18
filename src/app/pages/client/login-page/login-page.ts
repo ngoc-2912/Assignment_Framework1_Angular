@@ -50,13 +50,13 @@ export class LoginPage implements OnInit {
         // lưu token
         this.authService.saveToken(token);
 
-        // ✅ alert đăng nhập thành công
-       alert(res?.data?.messageAlert || res?.messageAlert || "Đăng nhập thành công");
+        // alert đăng nhập thành công
+       this.showMessage('Đăng nhập thành công!', 'success');
 
         // về trang chủ
         setTimeout(() => {
           this.router.navigate(['/']);
-        }, 3000);
+        }, 1000);
       })
       .catch((err: any) => {
         if (err.response?.data?.messageAlert) {
