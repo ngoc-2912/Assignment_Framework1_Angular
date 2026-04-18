@@ -46,7 +46,7 @@
   @for (product of filteredProducts(); track product.id) {
     <div class="col-sm-6 col-xl-4">
       <article class="card h-100 border-0 shadow-sm overflow-hidden product-card">
-        <a [routerLink]="['/shop', product.slug]" class="product-image-wrap">
+        <a [routerLink]="['/shop', product.name]" class="product-image-wrap">
           <img
             [src]="product.image"
             [alt]="product.name"
@@ -62,7 +62,7 @@
             <small class="text-secondary">4.5/5</small>
           </div>
           <h2 class="h5">
-            <a [routerLink]="['/shop', product.slug]" class="link-dark text-decoration-none">
+            <a [routerLink]="['/shop', product.name]" class="link-dark text-decoration-none">
               {{ product.name }}
             </a>
           </h2>
@@ -72,9 +72,10 @@
             <div>
               <p class="fw-bold fs-5 mb-0 text-danger">{{ +product.price | number:'1.0-0' }} VND</p>
             </div>
-            <button class="btn btn-dark btn-sm" type="button">
-              <i class="bi bi-cart-plus mr-1"></i> Thêm vào giỏ
-            </button>
+            <a [routerLink]="['/shop', product.name]" class="link-dark text-decoration-none">   <button class="btn btn-dark btn-sm" type="button">
+              <i class="bi bi-cart-plus mr-1"></i> Xem chi tiết
+            </button></a>
+         
           </div>
         </div>
       </article>
