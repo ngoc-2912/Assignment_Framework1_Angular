@@ -3,10 +3,11 @@ import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@ang
 import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { IUser } from '../../../interfaces/user.interface';
 import { UserService } from '../../../services/user.service';
+import { UiNotification } from '../../../components/ui/notification/notification';
 
 @Component({
   selector: 'app-user-detail',
-  imports: [DatePipe, RouterLink],
+  imports: [DatePipe, RouterLink, UiNotification],
   templateUrl: './user-detail.html',
   styleUrl: './user-detail.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,7 +16,7 @@ export class UserDetail implements OnInit {
   user = signal<IUser | null>(null);
   selectedActive = signal('1');
   message = signal('');
-  messageType = signal('success');
+  messageType = signal<'success' | 'danger'>('success');
   protected id = 0;
 
   constructor(
@@ -70,7 +71,7 @@ export class UserDetail implements OnInit {
     this.messageType.set(type);
     setTimeout(() => {
       this.message.set('');
-      this.messageType.set('');
+      this.messageType.set('success');
     }, 3000);
   }
 }

@@ -3,10 +3,11 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CategoryService } from '../../../services/category.service';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { ICategory } from '../../../interfaces/category.interface';
+import { UiNotification } from '../../../components/ui/notification/notification';
 
 @Component({
   selector: 'app-category-edit',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, UiNotification],
   templateUrl: './category-edit.html',
   styleUrl: './category-edit.scss',
 })
@@ -14,7 +15,7 @@ export class CategoryEdit {
   protected id: number = 0;
   submitted = signal(false);
   message = signal('');
-  messageType = signal('success');
+  messageType = signal<'success' | 'danger'>('success');
   nameError = signal('');
   category: ICategory | null = null;
   formData = new FormGroup({

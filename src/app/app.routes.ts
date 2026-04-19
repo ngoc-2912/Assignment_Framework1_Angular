@@ -35,6 +35,12 @@ export const routes: Routes = [
 						.then(m => m.CheckoutPage),
 			},
 			{
+				path: 'thank-you',
+				loadComponent: () =>
+					import('./pages/client/thank-you-page/thank-you-page')
+						.then(m => m.ThankYouPage),
+			},
+			{
 				path: 'login',
 				loadComponent: () =>
 					import('./pages/client/login-page/login-page').then(m => m.LoginPage),
@@ -156,6 +162,7 @@ export const routes: Routes = [
 	// ===== NOT FOUND =====
 	{
 		path: '**',
-		redirectTo: '',
+		loadComponent: () =>
+			import('./pages/not-found-page/not-found-page').then(m => m.NotFoundPage),
 	},
 ];

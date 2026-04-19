@@ -4,24 +4,30 @@
     <p class="mt-3">Đang tải thông tin sản phẩm...</p>
   </div>
 } @else {
+  <app-ui-notification
+    [message]="toastMessage()"
+    [type]="toastType()"
+    (dismiss)="closeToast()"
+  ></app-ui-notification>
+
   <section class="row g-4 align-items-start mb-5">
     <div class="col-lg-6">
       <div class="detail-image rounded-4 overflow-hidden shadow-sm bg-white">
-        <!-- ✅ ẢNH CHÍNH (có variant) -->
-        <img 
-          [src]="selectedVariant()?.image || product()?.image || 'assets/no-image.png'" 
-          [alt]="product()?.name" 
-          class="w-100 object-fit-cover" 
-          style="max-height: 500px;" />
+        <!-- ẢNH CHÍNH (có variant) -->
+        <img
+          [src]="selectedVariant()?.image || product()?.image || 'assets/no-image.png'"
+          [alt]="product()?.name"
+          class="w-100 main-product-image"
+        />
       </div>
 
-      <!-- ✅ ẢNH NHỎ VARIANT -->
+      <!-- ẢNH NHỎ VARIANT -->
       @if (variants().length > 0) {
-        <div class="d-flex gap-2 mt-3 flex-wrap">
+        <div class="d-flex mt-3 flex-wrap variant-thumbs">
           @for (v of variants(); track v.id) {
-            <img 
+            <img
               [src]="v.image || product()?.image"
-              style="width:60px; height:60px; object-fit:cover; cursor:pointer; border-radius:8px;"
+              class="variant-thumb"
               [class.border]="selectedVariant()?.id === v.id"
               [class.border-dark]="selectedVariant()?.id === v.id"
               (click)="selectedVariant.set(v)"
@@ -30,76 +36,79 @@
         </div>
       }
     </div>
-  
+
     <div class="col-lg-6">
       <p class="text-secondary mb-2">
-        Thương hiệu: <strong>SmartNest</strong> • {{ product()?.Category?.name || 'Chưa phân loại' }}
+        Thương hiệu: <strong>SmartNest</strong> •
+        {{ product()?.Category?.name || 'Chưa phân loại' }}
       </p>
-      <h1 class="display-6 fw-bold mb-3">{{ product()?.name || 'Sản phẩm đang cập nhật tên...' }}</h1>
-      <p class="lead text-secondary">{{ product()?.description || 'Mô tả ngắn đang được cập nhật.' }}</p>
-  
+      <h1 class="display-6 fw-bold mb-3">
+        {{ product()?.name || 'Sản phẩm đang cập nhật tên...' }}
+      </h1>
+      <p class="lead text-secondary">
+        {{ product()?.short_description || 'Mô tả ngắn đang được cập nhật.' }}
+      </p>
+
       <div class="d-flex gap-3 align-items-end mb-3">
         <div>
-          <!-- ✅ GIÁ THEO VARIANT -->
+          <!-- GIÁ THEO VARIANT -->
           <p class="fw-bold fs-3 mb-0 text-danger">
-            {{ (+(selectedVariant()?.price ?? product()?.price ?? 0)) | number }} VND
+            {{ +(selectedVariant()?.price ?? product()?.price ?? 0) | number }} VND
           </p>
-          <small class="text-decoration-line-through text-secondary">
-            {{ (+(selectedVariant()?.price ?? product()?.price ?? 0) * 1.2) | number }} VND
-          </small>
         </div>
-        <span class="badge text-bg-light border">4.8/5 • 233 đánh giá</span>
       </div>
 
-      <!-- ✅ CHỌN VARIANT -->
+      <!-- CHỌN VARIANT -->
       @if (variants().length > 0) {
-        <div class="mb-4">
-          <p class="fw-semibold mb-2">Chọn biến thể:</p>
+        <div class="mt-3 mb-3">
+          <label class="form-label fw-semibold mb-2" for="variantSelect">Chọn biến thể</label>
 
-          <div class="d-flex flex-wrap gap-2">
+          <select
+            id="variantSelect"
+            class="form-select form-select-lg variant-select"
+            [value]="selectedVariant()?.id ?? ''"
+            (change)="onVariantSelect($event)"
+          >
             @for (v of variants(); track v.id) {
-              <button 
-                class="btn"
-                [ngClass]="selectedVariant()?.id === v.id ? 'btn-dark' : 'btn-outline-dark'"
-                (click)="selectedVariant.set(v)"
-              >
-                {{ v.name }}
-              </button>
+              <option [value]="v.id">{{ getVariantLabel(v) }}</option>
             }
-          </div>
+          </select>
         </div>
       }
-  
+
       <div class="d-flex flex-wrap gap-2 mb-4">
         <span class="badge rounded-pill text-bg-secondary-subtle border text-dark">Chính hãng</span>
-        <span class="badge rounded-pill text-bg-secondary-subtle border text-dark">Bảo hành 12th</span>
+        <span class="badge rounded-pill text-bg-secondary-subtle border text-dark"
+          >Bảo hành 12th</span
+        >
         <span class="badge rounded-pill text-bg-secondary-subtle border text-dark">Free Ship</span>
       </div>
-  
+
       <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
-        <div class="input-group qty-box" style="width: 130px;">
-          <button class="btn btn-outline-secondary" type="button">-</button>
-          <input class="form-control text-center" type="number" value="1" min="1" />
-          <button class="btn btn-outline-secondary" type="button">+</button>
+        <div class="input-group qty-box">
+          <button class="btn btn-outline-secondary" type="button" (click)="decreaseQuantity()">-</button>
+          <input
+            class="form-control text-center"
+            type="number"
+            min="1"
+            [value]="quantity()"
+            (input)="onQuantityInput($event)"
+          />
+          <button class="btn btn-outline-secondary" type="button" (click)="increaseQuantity()">+</button>
         </div>
 
-        <!-- ✅ BUTTON -->
-        <button 
-          class="btn btn-dark btn-lg" 
+        <!-- BUTTON -->
+        <button
+          class="btn btn-dark btn-lg"
           type="button"
-          [disabled]="variants().length > 0 && !selectedVariant()"
           (click)="addToCart()"
+          [disabled]="isAddingToCart() || (variants().length > 0 && !selectedVariant())"
         >
-          Thêm vào giỏ
+          {{ isAddingToCart() ? 'Đang thêm...' : 'Thêm vào giỏ' }}
         </button>
 
-       @if (variants().length === 0) {
-  <button class="btn btn-primary btn-lg" type="button">
-    Mua ngay
-  </button>
-}
       </div>
-  
+
       <a class="link-dark fw-semibold text-decoration-none" routerLink="/shop">
         <i class="bi bi-arrow-left"></i> Quay lại cửa hàng
       </a>
@@ -110,7 +119,10 @@
   <section class="mb-5">
     <div class="bg-white rounded-4 p-4 p-lg-5 shadow-sm border">
       <h2 class="h4 fw-bold mb-3">Mô tả chi tiết</h2>
-      <div class="text-secondary" [innerHTML]="product()?.description || 'Nội dung chi tiết đang được cập nhật...'"></div>
+      <div
+        class="text-secondary"
+        [innerHTML]="product()?.description || 'Nội dung chi tiết đang được cập nhật...'"
+      ></div>
     </div>
   </section>
 
@@ -125,16 +137,25 @@
         <div class="col-6 col-md-4 col-xl-3">
           <article class="card h-100 border-0 shadow-sm overflow-hidden product-card">
             <a [routerLink]="['/shop', rel.name]" class="product-image-wrap">
-              <img [src]="rel.image || 'assets/no-image.png'" [alt]="rel.name" class="card-img-top" style="height: 180px; object-fit: cover;" />
+              <img
+                [src]="rel.image || 'assets/no-image.png'"
+                [alt]="rel.name"
+                class="card-img-top related-product-image"
+              />
             </a>
             <div class="card-body d-flex flex-column">
               <h2 class="h6 fw-bold">
-                <a [routerLink]="['/shop', rel.name]" class="link-dark text-decoration-none text-truncate d-block">
+                <a
+                  [routerLink]="['/shop', rel.name]"
+                  class="link-dark text-decoration-none text-truncate d-block"
+                >
                   {{ rel.name || 'Sản phẩm liên quan' }}
                 </a>
               </h2>
-              <p class="fw-bold text-primary mb-0">{{ (+rel.price || 0) | number }} VND</p>
-              <button class="btn btn-outline-dark btn-sm mt-3" [routerLink]="['/shop', rel.name]">Xem chi tiết</button>
+              <p class="fw-bold text-primary mb-0">{{ +rel.price || 0 | number }} VND</p>
+              <button class="btn btn-outline-dark btn-sm mt-3" [routerLink]="['/shop', rel.name]">
+                Xem chi tiết
+              </button>
             </div>
           </article>
         </div>

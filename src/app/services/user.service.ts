@@ -18,4 +18,8 @@ export class UserService extends BaseApi {
   updateActive(id: number, active: string) {
     return this.put(`${API_ENDPOINT.user.update}/${id}`, { active });
   }
+
+  getMe() {
+    return this.get<{ data: IUser }>(API_ENDPOINT.user.getMe);
+  }
 }

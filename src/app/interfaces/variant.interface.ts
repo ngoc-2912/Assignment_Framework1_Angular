@@ -10,6 +10,8 @@ export interface IVariant {
   sku: string | null;
   price: string;
   image: string | null;
+  color?: string | null;
+  size?: string | null;
   createdAt?: string;
   updatedAt?: string;
   Product?: IVariantProduct;

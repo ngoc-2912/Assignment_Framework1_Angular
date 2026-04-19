@@ -28,12 +28,11 @@
 
         <div class="card-body p-4 p-md-5">
           <!-- ALERT -->
-          @if (message() && messageType()) {
-            <div class="alert alert-{{ messageType() }} alert-dismissible fade show mb-3">
-              {{ message() }}
-              <button type="button" class="btn-close" (click)="message.set('')"></button>
-            </div>
-          }
+          <app-ui-notification
+            [message]="message()"
+            [type]="messageType() === 'danger' ? 'danger' : 'success'"
+            (dismiss)="message.set('')"
+          ></app-ui-notification>
 
           <form [formGroup]="registerForm" (ngSubmit)="registerAdmin()">
             <!-- FULL NAME -->

@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/cor
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { RouterLink, Router } from '@angular/router';
+import { UiNotification } from '../../../components/ui/notification/notification';
 
 @Component({
   selector: 'app-login-page',
-  imports: [RouterLink, ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule, UiNotification],
   templateUrl: './login-page.html',
   styleUrl: './login-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

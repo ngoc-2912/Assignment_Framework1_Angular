@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/cor
 import { RouterLink } from '@angular/router'; 
 import { IProduct } from '../../../entities/product';
 import { ProductService } from '../../../services/product.service';
+import { UiNotification } from '../../../components/ui/notification/notification';
 
 @Component({
   selector: 'app-product-page',
-  imports: [RouterLink],
+  imports: [RouterLink, UiNotification],
   templateUrl: './product-page.html',
   styleUrl: './product-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -13,7 +14,7 @@ import { ProductService } from '../../../services/product.service';
 export class ProductPage implements OnInit {
   products = signal<IProduct[]>([]);
   message = signal('');
-  messageType = signal('success');
+  messageType = signal<'success' | 'danger'>('success');
   showModal = signal(false);
   selectedProduct = signal<IProduct | null>(null);
   currentPage = signal(1);
@@ -88,7 +89,7 @@ export class ProductPage implements OnInit {
     this.messageType.set(type);
     setTimeout(() => {
       this.message.set('');
-      this.messageType.set('');
+      this.messageType.set('success');
     }, 3000);
   }
 

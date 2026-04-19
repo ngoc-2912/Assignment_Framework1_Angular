@@ -1,4 +1,10 @@
 <div class="profile-shell row g-4">
+  <app-ui-notification
+    [message]="toastMessage"
+    [type]="toastType"
+    (dismiss)="toastMessage = ''"
+  ></app-ui-notification>
+
   <div class="col-lg-4">
     <section class="profile-head rounded-4 p-4 text-center h-100 shadow-sm border-0">
       <div class="avatar-wrap">
@@ -61,8 +67,6 @@
       <div *ngIf="isLoadingProfile" class="alert alert-light border text-secondary mb-3">
         Đang tải thông tin hồ sơ...
       </div>
-
-      <div *ngIf="profileError" class="alert alert-warning border-0 mb-3">{{ profileError }}</div>
 
       <div class="row g-3">
         <div class="col-md-6">

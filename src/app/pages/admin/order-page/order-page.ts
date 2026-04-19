@@ -2,10 +2,11 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IOrder } from '../../../interfaces/order.interface';
 import { OrderService } from '../../../services/order.service';
+import { UiNotification } from '../../../components/ui/notification/notification';
 
 @Component({
   selector: 'app-order-page',
-  imports: [RouterLink],
+  imports: [RouterLink, UiNotification],
   templateUrl: './order-page.html',
   styleUrl: './order-page.scss'
 })
@@ -13,7 +14,7 @@ export class OrderPage implements OnInit {
   private orderService = inject(OrderService);
   orders = signal<IOrder[]>([]);
   message = signal('');
-  messageType = signal('success');
+  messageType = signal<'success' | 'danger'>('success');
   currentPage = signal(1);
   totalPages = signal(1);
   totalItems = signal(0);
@@ -96,7 +97,7 @@ export class OrderPage implements OnInit {
     this.messageType.set(type);
     setTimeout(() => {
       this.message.set('');
-      this.messageType.set('');
+      this.messageType.set('success');
     }, 3000);
   }
 }

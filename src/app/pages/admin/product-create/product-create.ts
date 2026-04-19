@@ -5,6 +5,7 @@ import { CategoryService } from '../../../services/category.service';
 import { ProductService } from '../../../services/product.service';
 import { VariantService } from '../../../services/variant.service';
 import { ICategory } from '../../../interfaces/category.interface';
+import { UiNotification } from '../../../components/ui/notification/notification';
 
 type VariantFormValue = {
   uid: string;
@@ -12,6 +13,8 @@ type VariantFormValue = {
   name: string;
   sku: string;
   price: string;
+  color: string;
+  size: string;
   image: string;
   imageFile: File | null;
   imagePreview: string;
@@ -19,7 +22,7 @@ type VariantFormValue = {
 
 @Component({
   selector: 'app-product-create',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, UiNotification],
   templateUrl: './product-create.html',
   styleUrl: './product-create.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,9 +32,11 @@ export class ProductCreate implements OnInit {
   message = signal('');
   messageType = signal<'success' | 'danger'>('success');
   nameError = signal('');
+  productImageError = signal('');
   categories = signal<ICategory[]>([]);
   productImagePreview = signal('');
   isSaving = signal(false);
+  submittedVariants = signal<Record<string, boolean>>({});
 
   selectedFile: File | null = null;
 
@@ -45,7 +50,8 @@ export class ProductCreate implements OnInit {
     image: new FormControl(''),
     category_id: new FormControl('', [Validators.required]),
     status: new FormControl('1'),
-    description: new FormControl(''),
+    short_description: new FormControl('', [Validators.required, Validators.minLength(10)]),
+    description: new FormControl('', [Validators.required, Validators.minLength(20)]),
     variants: new FormArray([]),
   });
 
@@ -87,9 +93,11 @@ export class ProductCreate implements OnInit {
         Validators.min(0),
         Validators.pattern('^[0-9]+$'),
       ]),
+      color: new FormControl(variant?.color ?? '', [Validators.required]),
+      size: new FormControl(variant?.size ?? '', [Validators.required]),
       image: new FormControl(variant?.image ?? ''),
       imageFile: new FormControl<File | null>(variant?.imageFile ?? null),
-      imagePreview: new FormControl(variant?.imagePreview ?? variant?.image ?? ''),
+      imagePreview: new FormControl(variant?.imagePreview ?? variant?.image ?? '', [Validators.required]),
     });
   }
 
@@ -135,6 +143,9 @@ export class ProductCreate implements OnInit {
 
     this.selectedFile = file;
     this.productImagePreview.set(file ? URL.createObjectURL(file) : '');
+    if (file) {
+      this.productImageError.set('');
+    }
   }
 
   private async uploadImage(file: File) {
@@ -157,7 +168,9 @@ export class ProductCreate implements OnInit {
   }
 
   private hasVariantData(value: VariantFormValue) {
-    return [value.name, value.sku, value.price, value.imagePreview].some((field) => field.trim() !== '');
+    return [value.name, value.sku, value.price, value.color, value.size, value.imagePreview].some(
+      (field) => field.trim() !== '',
+    );
   }
 
   private async resolveVariantImage(variant: VariantFormValue) {
@@ -175,6 +188,8 @@ export class ProductCreate implements OnInit {
       sku: string | null;
       price: number;
       image: string | null;
+      color: string | null;
+      size: string | null;
     }> = [];
 
     for (const control of this.variantControls) {
@@ -190,6 +205,8 @@ export class ProductCreate implements OnInit {
         sku: variant.sku.trim() || null,
         price: Number(variant.price),
         image: await this.resolveVariantImage(variant),
+        color: variant.color.trim() || null,
+        size: variant.size.trim() || null,
       });
     }
 
@@ -199,9 +216,24 @@ export class ProductCreate implements OnInit {
   addProduct = async () => {
     this.submitted.set(true);
     this.nameError.set('');
+    this.productImageError.set('');
+    
+    // Mark all variants as submitted for validation display
+    const submittedMap: Record<string, boolean> = {};
+    for (const control of this.variantControls) {
+      const uid = control.get('uid')?.value;
+      if (uid) {
+        submittedMap[uid] = true;
+      }
+    }
+    this.submittedVariants.set(submittedMap);
+    
     let createdProductId = 0;
 
     if (this.createForm.invalid || !this.selectedFile) {
+      if (!this.selectedFile) {
+        this.productImageError.set('Ảnh sản phẩm không được để trống');
+      }
       this.message.set('Vui lòng nhập đủ thông tin và chọn ảnh!');
       this.messageType.set('danger');
       return;

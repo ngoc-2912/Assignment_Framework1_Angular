@@ -9,6 +9,8 @@ type VariantPayload = {
   sku: string | null;
   price: number;
   image: string | null;
+  color: string | null;
+  size: string | null;
 };
 
 @Injectable({

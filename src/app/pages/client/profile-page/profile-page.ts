@@ -3,12 +3,13 @@ import { ProfileService } from '../../../services/profile.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IUser } from '../../../interfaces/user.interface';
-import { AuthService } from '../../../services/auth.service';
+import { UiNotification } from '../../../components/ui/notification/notification';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-profile-page',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, UiNotification],
   templateUrl: './profile-page.html',
   styleUrl: './profile-page.scss'
 })
@@ -17,7 +18,8 @@ export class ProfilePage implements OnInit {
   orders: any[] = [];
   isLoadingProfile = false;
   isLoadingOrders = false;
-  profileError = '';
+  toastMessage = '';
+  toastType: 'success' | 'danger' | 'warning' = 'success';
 
   formPassword = {
     oldPassword: '',
@@ -28,7 +30,7 @@ export class ProfilePage implements OnInit {
 
   constructor(
     private profileService: ProfileService,
-    private authService: AuthService,
+    private userService: UserService,
   ) {}
 
   ngOnInit(): void {
@@ -44,24 +46,22 @@ export class ProfilePage implements OnInit {
 
   loadProfile() {
     this.isLoadingProfile = true;
-    this.profileError = '';
+    this.toastMessage = '';
 
-    this.profileService.getProfile()
-      .then((res: unknown) => {
-        const mappedUser = this.extractUserFromResponse(res);
-
-        if (mappedUser) {
-          this.user = mappedUser;
+    this.userService.getMe()
+      .then((res) => {
+        if (res?.data?.full_name && res?.data?.email) {
+          this.user = res.data;
           return;
         }
 
-        this.user = this.getFallbackUserFromToken();
-        this.profileError = 'Không đọc được dữ liệu hồ sơ từ backend.';
+        this.user = null;
+        this.showToast('Không đọc được dữ liệu hồ sơ từ getMe.', 'warning');
       })
       .catch(err => {
         console.log(err);
-        this.user = this.getFallbackUserFromToken();
-        this.profileError = 'Không thể tải hồ sơ. Vui lòng thử lại.';
+        this.user = null;
+        this.showToast('Không thể tải hồ sơ từ getMe. Vui lòng thử lại.', 'danger');
       })
       .finally(() => {
         this.isLoadingProfile = false;
@@ -87,13 +87,24 @@ export class ProfilePage implements OnInit {
   changePassword() {
     this.profileService.changePassword(this.formPassword)
       .then(() => {
-        alert('Đổi mật khẩu thành công');
+        this.showToast('Đổi mật khẩu thành công', 'success');
         this.formPassword = { oldPassword: '', newPassword: '' };
       })
       .catch(err => {
         console.log(err);
-        alert('Đổi mật khẩu thất bại');
+        this.showToast('Đổi mật khẩu thất bại', 'danger');
       });
+  }
+
+  showToast(message: string, type: 'success' | 'danger' | 'warning') {
+    this.toastMessage = message;
+    this.toastType = type;
+
+    setTimeout(() => {
+      if (this.toastMessage === message) {
+        this.toastMessage = '';
+      }
+    }, 3000);
   }
 
   logout() {
@@ -130,58 +141,4 @@ export class ProfilePage implements OnInit {
     return fullName.charAt(0).toUpperCase();
   }
 
-  private extractUserFromResponse(res: unknown): IUser | null {
-    if (!res || typeof res !== 'object') {
-      return null;
-    }
-
-    const root = res as Record<string, unknown>;
-    const possibleUser = root['data'] || root['user'] || root['profile'] || root;
-
-    if (!possibleUser || typeof possibleUser !== 'object') {
-      return null;
-    }
-
-    const data = possibleUser as Record<string, unknown>;
-    const full_name = this.getStringValue(data['full_name']);
-    const email = this.getStringValue(data['email']);
-
-    if (!full_name || !email) {
-      return null;
-    }
-
-    return {
-      id: Number(data['id'] ?? 0),
-      full_name,
-      email,
-      phone: this.getStringValue(data['phone']) || undefined,
-      address: this.getStringValue(data['address']) || undefined,
-      role: this.getStringValue(data['role']) || 'user',
-      active: this.getStringValue(data['active']) || '1',
-      createdAt: this.getStringValue(data['createdAt']) || '',
-      updatedAt: this.getStringValue(data['updatedAt']) || '',
-    };
-  }
-
-  private getFallbackUserFromToken(): IUser | null {
-    const payload = this.authService.getTokenPayload();
-
-    if (!payload?.full_name || !payload?.email) {
-      return null;
-    }
-
-    return {
-      id: 0,
-      full_name: payload.full_name,
-      email: payload.email,
-      role: payload.role || 'user',
-      active: '1',
-      createdAt: '',
-      updatedAt: '',
-    };
-  }
-
-  private getStringValue(value: unknown): string {
-    return typeof value === 'string' ? value.trim() : '';
-  }
 }

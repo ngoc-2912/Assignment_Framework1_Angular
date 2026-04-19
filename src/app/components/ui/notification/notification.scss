@@ -1,0 +1,31 @@
+:host {
+  display: block;
+}
+
+.toast-inline {
+  position: fixed;
+  top: 84px;
+  right: 20px;
+  z-index: 1050;
+  min-width: 280px;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+}
+
+.toast-inline .btn-close {
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .toast-inline {
+    top: 76px;
+    right: 12px;
+    left: 12px;
+    max-width: none;
+    min-width: 0;
+  }
+}

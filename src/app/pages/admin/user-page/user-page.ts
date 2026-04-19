@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@ang
 import { RouterLink } from '@angular/router';
 import { IUser } from '../../../interfaces/user.interface';
 import { UserService } from '../../../services/user.service';
+import { UiNotification } from '../../../components/ui/notification/notification';
 
 @Component({
   selector: 'app-user-page',
-  imports: [RouterLink],
+  imports: [RouterLink, UiNotification],
   templateUrl: './user-page.html',
   styleUrl: './user-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,7 +16,7 @@ export class UserPage implements OnInit {
 
   users = signal<IUser[]>([]);
   message = signal('');
-  messageType = signal('success');
+  messageType = signal<'success' | 'danger'>('success');
 
   ngOnInit(): void {
     this.loadUsers();
@@ -53,7 +54,7 @@ export class UserPage implements OnInit {
     this.messageType.set(type);
     setTimeout(() => {
       this.message.set('');
-      this.messageType.set('');
+      this.messageType.set('success');
     }, 3000);
   }
 }

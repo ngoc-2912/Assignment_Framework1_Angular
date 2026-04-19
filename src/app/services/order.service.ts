@@ -18,4 +18,16 @@ export class OrderService extends BaseApi {
   updateStatus(id: number, status: string) {
     return this.put(`${API_ENDPOINT.order.update}/${id}`, { status });
   }
+
+  create(payload: {
+    full_name: string;
+    email: string;
+    phone: string;
+    address: string;
+    payment_method: string;
+    note?: string;
+    total_price: number;
+  }) {
+    return this.post<{ order: { id: number } }>(API_ENDPOINT.order.add, payload);
+  }
 }

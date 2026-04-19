@@ -2,10 +2,11 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CategoryService } from '../../../services/category.service';
 import { ICategory } from '../../../interfaces/category.interface';
 import { RouterLink } from '@angular/router';
+import { UiNotification } from '../../../components/ui/notification/notification';
 
 @Component({
   selector: 'app-category-page',
-  imports: [RouterLink],
+  imports: [RouterLink, UiNotification],
   templateUrl: './category-page.html',
   styleUrl: './category-page.scss',
 })
@@ -14,7 +15,7 @@ export class CategoryPage implements OnInit {
 
   categories = signal<ICategory[]>([]);
   message = signal('');
-  messageType = signal('success');
+  messageType = signal<'success' | 'danger'>('success');
   showModal = signal(false);
   selectedCategory = signal<ICategory | null>(null);
 
@@ -64,7 +65,7 @@ export class CategoryPage implements OnInit {
     this.messageType.set(type);
     setTimeout(() => {
       this.message.set('');
-      this.messageType.set('');
+      this.messageType.set('success');
     }, 3000);
   }
 }

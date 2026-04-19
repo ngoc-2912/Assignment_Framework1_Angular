@@ -1,11 +1,10 @@
 <div class="container py-4">
 
-  @if (message() && messageType()) {
-    <div class="alert alert-{{ messageType() }} alert-dismissible fade show">
-      {{ message() }}
-      <button type="button" class="btn-close" (click)="message.set('')"></button>
-    </div>
-  }
+  <app-ui-notification
+    [message]="message()"
+    [type]="messageType() === 'danger' ? 'danger' : 'success'"
+    (dismiss)="message.set('')"
+  ></app-ui-notification>
 
   @if (order(); as currentOrder) {
 
@@ -70,8 +69,7 @@
             <thead>
               <tr>
                 <th>#</th>
-                <th>Mã chi tiết</th>
-                <th>Mã sản phẩm</th>
+                <th>Tên sản phẩm</th>
                 <th>Giá</th>
                 <th>Số lượng</th>
                 <th>Tổng</th>
@@ -81,8 +79,7 @@
               @for (item of currentOrder.OrderDetails; track item.id; let i = $index) {
                 <tr>
                   <td>{{ i + 1 }}</td>
-                  <td>#{{ item.id }}</td>
-                  <td>#PROD{{ item.product_id }}</td>
+                  <td>{{ item.name }}</td>
                   <td>{{ formatPrice(item.price) }}</td>
                   <td>{{ item.quantity }}</td>
                   <td>{{ getLineTotal(item.price, item.quantity) }}</td>

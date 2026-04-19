@@ -4,12 +4,11 @@
     <a class="btn btn-outline-secondary" routerLink="/admin/categories">Quay lại</a>
   </div>
 
-  @if (message() && messageType()) {
-    <div class="alert alert-{{ messageType() }} alert-dismissible fade show">
-      {{ message() }}
-      <button type="button" class="btn-close" (click)="message.set('')"></button>
-    </div>
-  }
+  <app-ui-notification
+    [message]="message()"
+    [type]="messageType() === 'danger' ? 'danger' : 'success'"
+    (dismiss)="message.set('')"
+  ></app-ui-notification>
 
   <div class="form border rounded p-4 bg-light mx-auto">
     <h2 class="text-center mb-4">Thêm danh mục</h2>

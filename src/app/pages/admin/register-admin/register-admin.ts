@@ -2,11 +2,12 @@ import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/cor
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { UiNotification } from '../../../components/ui/notification/notification';
 
 @Component({
   selector: 'app-register-admin',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, UiNotification],
   templateUrl: './register-admin.html',
   styleUrl: './register-admin.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

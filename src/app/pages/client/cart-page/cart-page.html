@@ -2,8 +2,16 @@
 <div class="cart-page container py-4 mt-custom" >
   <section class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
     <h1 class="h2 fw-bold mb-0">Giỏ hàng của bạn</h1>
-    <button class="btn btn-outline-danger" type="button">Xóa tất cả</button>
+    <button class="btn btn-outline-danger" type="button" (click)="clearAll()" [disabled]="cartItems().length === 0">Xóa tất cả</button>
   </section>
+
+  @if (errorMessage()) {
+    <div class="alert alert-warning border-0 mb-3">{{ errorMessage() }}</div>
+  }
+
+  @if (isLoading()) {
+    <div class="alert alert-light border text-secondary mb-4">Đang tải giỏ hàng...</div>
+  }
 
   <div class="row g-4">
     <div class="col-lg-8">
@@ -21,53 +29,53 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>
-                    <div class="d-flex align-items-center gap-3">
-                      <!-- Ảnh -->
-                      <img
-                        src="https://dienmayquanghanh.com/Upload/avatar/content-2024-4/ava-noi-chien-khong-dau-philips-na120-1.jpg"
-                        class="cart-img"
-                        height="50px"
-                      />
-                      <!-- Tên -->
-                      <a routerLink="/shop/noi-chien-khong-dau-philips-hd9257" class="cart-link">
-                        Nồi chiên không dầu Philips HD9257
-                      </a>
-                    </div>
-                  </td>
-                  <td>2.690.000 VND</td>
-                  <td style="max-width: 120px">
-                    <input class="form-control" type="number" min="1" value="1" />
-                  </td>
-                  <td>2.690.000 VND</td>
-                  <td>
-                    <button class="btn btn-sm btn-outline-secondary" type="button">Xóa</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <!-- Ảnh -->
-                    <img
-                      src="https://cdn.khongkhixanh.vn/media/lg/as60ghwg0/m%C3%A1y%20l%E1%BB%8Dc%20kh%C3%B4ng%20kh%C3%AD%20lg%20puricare%20360%20hit%20as60ghwg0%20kh%C3%B4ng%20kh%C3%AD%20xanh%20%E1%BA%A3nh%201-min.jpg"
-                      class="cart-img"
-                      height="50px"
-                    />
-                    <!-- Tên -->
-                    <a routerLink="/shop/noi-chien-khong-dau-philips-hd9257" class="cart-link">
-                      Máy lọc không khí
-                    </a>
-                  </td>
+                @if (cartItems().length === 0 && !isLoading()) {
+                  <tr>
+                    <td colspan="5" class="text-center text-muted py-4">Giỏ hàng đang trống</td>
+                  </tr>
+                }
 
-                  <td>3.290.000 VND</td>
-                  <td style="max-width: 120px">
-                    <input class="form-control" type="number" min="1" value="1" />
-                  </td>
-                  <td>3.290.000 VND</td>
-                  <td>
-                    <button class="btn btn-sm btn-outline-secondary" type="button">Xóa</button>
-                  </td>
-                </tr>
+                @for (item of cartItems(); track item.id) {
+                  <tr>
+                    <td>
+                      <div class="d-flex align-items-center gap-3">
+                        <img [src]="item.image" class="cart-img" height="50" [alt]="item.name" />
+                        <a [routerLink]="['/shop', item.name]" class="cart-link">
+                          {{ item.name }}
+                        </a>
+                      </div>
+                    </td>
+                    <td>{{ formatPrice(item.price) }}</td>
+                    <td>
+                      <div class="input-group" style="width: 132px;">
+                        <button
+                          class="btn btn-outline-secondary"
+                          type="button"
+                          (click)="decreaseQuantity(item)"
+                          [disabled]="item.quantity <= 1 || isUpdatingItem(item.id)"
+                        >-</button>
+                        <input
+                          class="form-control text-center"
+                          type="number"
+                          min="1"
+                          [value]="item.quantity"
+                          (change)="onQuantityInput(item, $event)"
+                          [disabled]="isUpdatingItem(item.id)"
+                        />
+                        <button
+                          class="btn btn-outline-secondary"
+                          type="button"
+                          (click)="increaseQuantity(item)"
+                          [disabled]="isUpdatingItem(item.id)"
+                        >+</button>
+                      </div>
+                    </td>
+                    <td>{{ formatPrice(+item.price * item.quantity) }}</td>
+                    <td>
+                      <button class="btn btn-sm btn-outline-secondary" type="button" (click)="removeItem(item)">Xóa</button>
+                    </td>
+                  </tr>
+                }
               </tbody>
             </table>
           </div>
@@ -83,33 +91,13 @@
 
       <div class="d-flex justify-content-between mb-2">
   <span>Tạm tính</span>
-  <strong>5.980.000 VND</strong>
+  <strong>{{ formatPrice(subtotal()) }}</strong>
 </div>
 
 
 <div class="d-flex justify-content-between mb-3">
   <span>Vận chuyển</span>
-  <strong>20.000 VND</strong>
-</div>
-<div class="mb-3">
-  <label class="form-label fw-semibold">Mã giảm giá</label>
-<div class="voucher-box">
-  <input type="text" class="form-control" placeholder="Nhập mã">
-  <button class="btn btn-dark">Áp dụng</button>
-</div>
-</div>
-<div class="mb-3">
-  <span class="d-block mb-2 fw-semibold">Phương thức thanh toán</span>
-
-  <div class="payment-option">
-    <input type="radio" name="payment" id="cod" checked>
-    <label for="cod">Thanh toán khi nhận hàng (COD)</label>
-  </div>
-
-  <div class="payment-option">
-    <input type="radio" name="payment" id="bank">
-    <label for="bank">Chuyển khoản ngân hàng</label>
-  </div>
+  <strong>{{ formatPrice(shippingFee()) }}</strong>
 </div>
 
 
@@ -117,12 +105,12 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
   <span class="fw-semibold">Tổng cộng</span>
-  <strong class="fs-5">6.000.000 VND</strong>
+  <strong class="fs-5">{{ formatPrice(total()) }}</strong>
 </div>
 
           <hr />
          
-          <a class="btn btn-dark w-100" routerLink="/checkout">Tiến hành thanh toán</a>
+          <a class="btn btn-dark w-100" routerLink="/checkout" [class.disabled]="cartItems().length === 0">Tiến hành thanh toán</a>
         </div>
       </aside>
     </div>

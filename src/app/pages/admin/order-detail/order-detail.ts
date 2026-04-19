@@ -3,10 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IOrder } from '../../../interfaces/order.interface';
 import { OrderService } from '../../../services/order.service';
 import { DatePipe } from '@angular/common';
+import { UiNotification } from '../../../components/ui/notification/notification';
 
 @Component({
   selector: 'app-order-detail',
-  imports: [DatePipe],
+  imports: [DatePipe, UiNotification],
   templateUrl: './order-detail.html',
   styleUrl: './order-detail.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,7 +16,7 @@ export class OrderDetail implements OnInit {
   order = signal<IOrder | null>(null);
   selectedStatus = signal('0');
   message = signal('');
-  messageType = signal('success');
+  messageType = signal<'success' | 'danger'>('success');
   protected id = 0;
 
   constructor(
@@ -112,7 +113,7 @@ export class OrderDetail implements OnInit {
     this.messageType.set(type);
     setTimeout(() => {
       this.message.set('');
-      this.messageType.set('');
+      this.messageType.set('success');
     }, 3000);
   }
 }

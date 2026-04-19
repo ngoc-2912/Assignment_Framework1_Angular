@@ -1,0 +1,24 @@
+<section class="thank-you container py-5">
+  <div class="thank-you-card mx-auto text-center shadow-sm">
+    <div class="icon-wrap mb-3" aria-hidden="true">✓</div>
+    <h1 class="h2 fw-bold mb-2">Đặt hàng thành công!</h1>
+    <p class="text-muted mb-4">Cảm ơn bạn đã mua sắm. Chúng tôi sẽ xử lý đơn hàng sớm nhất có thể.</p>
+
+    @if (orderId()) {
+      <div class="info-row">
+        <span>Mã đơn hàng</span>
+        <strong>#{{ orderId() }}</strong>
+      </div>
+    }
+
+    <div class="info-row">
+      <span>Tổng thanh toán</span>
+      <strong>{{ formattedAmount() }}</strong>
+    </div>
+
+    <div class="d-flex flex-wrap justify-content-center gap-2 mt-4">
+      <a class="btn btn-dark" routerLink="/shop">Tiếp tục mua sắm</a>
+      <a class="btn btn-outline-secondary" routerLink="/">Về trang chủ</a>
+    </div>
+  </div>
+</section>

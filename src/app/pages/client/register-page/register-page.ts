@@ -2,11 +2,12 @@ import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/cor
 import { RouterLink, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
+import { UiNotification } from '../../../components/ui/notification/notification';
 
 @Component({
   selector: 'app-register-page',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule, UiNotification],
   templateUrl: './register-page.html',
   styleUrl: './register-page.scss',
 })

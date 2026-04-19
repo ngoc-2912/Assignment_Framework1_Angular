@@ -1,13 +1,9 @@
 <div class="container py-5">
-  @if (message() && messageType()) {
-    <div class="alert alert-custom alert-{{ messageType() }} alert-dismissible fade show border-0 shadow-sm mb-4 p-3 rounded-4">
-      <div class="d-flex align-items-center">
-        <i class="bi @if(messageType()==='danger'){bi-x-circle-fill} @else{bi-check-circle-fill} me-2 fs-5"></i>
-        <span class="fw-medium">{{ message() }}</span>
-      </div>
-      <button type="button" class="btn-close" (click)="message.set('')"></button>
-    </div>
-  }
+  <app-ui-notification
+    [message]="message()"
+    [type]="messageType() === 'danger' ? 'danger' : 'success'"
+    (dismiss)="message.set('')"
+  ></app-ui-notification>
 
   @if (user(); as currentUser) {
     <div class="header-action d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">

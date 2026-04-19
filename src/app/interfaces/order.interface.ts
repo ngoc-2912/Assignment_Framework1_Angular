@@ -6,9 +6,11 @@ export interface IOrderUser {
 
 export interface IOrderDetailItem {
   id: number;
-  product_id: number;
+  product_id: number | null;
+  variant_id: number | null;
   quantity: number;
   price: string;
+  name: string;
 }
 
 export interface IOrder {

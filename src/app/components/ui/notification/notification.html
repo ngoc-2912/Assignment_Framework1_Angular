@@ -1,0 +1,8 @@
+@if (message()) {
+  <div class="toast-inline alert alert-{{ type() }} shadow-sm border-0" role="status" aria-live="polite">
+    <span>{{ message() }}</span>
+    @if (dismissible()) {
+      <button type="button" class="btn-close" aria-label="Đóng" (click)="close()"></button>
+    }
+  </div>
+}

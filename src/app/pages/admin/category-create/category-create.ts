@@ -2,17 +2,18 @@ import { Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CategoryService } from '../../../services/category.service';
 import { Router, RouterLink } from '@angular/router';
+import { UiNotification } from '../../../components/ui/notification/notification';
 
 @Component({
   selector: 'app-category-create',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, UiNotification],
   templateUrl: './category-create.html',
   styleUrl: './category-create.scss',
 })
 export class CategoryCreate {
   submitted = signal(false);
   message = signal('');
-  messageType = signal('success');
+  messageType = signal<'success' | 'danger'>('success');
   nameError = signal('');
   createForm!: FormGroup;
 

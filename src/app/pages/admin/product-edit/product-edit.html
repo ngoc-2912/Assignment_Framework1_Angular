@@ -13,17 +13,11 @@
     </a>
   </div>
 
-  @if (message()) {
-    <div
-      class="alert alert-custom alert-{{ messageType() }} alert-dismissible fade show border-0 shadow-sm mb-4 rounded-4"
-    >
-      <div class="d-flex align-items-center">
-        <i class="bi bi-info-circle-fill me-2"></i>
-        <span>{{ message() }}</span>
-      </div>
-      <button type="button" class="btn-close" (click)="message.set('')"></button>
-    </div>
-  }
+  <app-ui-notification
+    [message]="message()"
+    [type]="messageType() === 'danger' ? 'danger' : 'success'"
+    (dismiss)="message.set('')"
+  ></app-ui-notification>
 
   <form class="form-grid" [formGroup]="editForm">
     <section class="surface surface-main">
@@ -117,16 +111,51 @@
             (change)="onFileChange($event)"
           />
           <div class="upload-note mt-2">Ảnh mới sẽ thay thế ảnh hiện tại khi bạn lưu.</div>
+          @if (submitted() && f['image'].errors) {
+            <div class="invalid-feedback-list">
+              <div>Ảnh sản phẩm không được để trống</div>
+            </div>
+          }
         </div>
 
         <div class="field field-span-2">
-          <label class="form-label">Mô tả</label>
+          <label class="form-label">Mô tả ngắn</label>
+          <textarea
+            rows="5"
+            class="form-control"
+            formControlName="short_description"
+            placeholder="Mô tả ngắn về sản phẩm..."
+          ></textarea>
+          @if (submitted() && f['short_description'].errors) {
+            <div class="invalid-feedback-list">
+              @if (f['short_description'].errors['required']) {
+                <div>Mô tả ngắn không được để trống</div>
+              }
+              @if (f['short_description'].errors['minlength']) {
+                <div>Mô tả ngắn phải dài hơn 10 ký tự</div>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="field field-span-2">
+          <label class="form-label">Mô tả chi tiết</label>
           <textarea
             rows="5"
             class="form-control"
             formControlName="description"
-            placeholder="Mô tả ngắn về sản phẩm..."
+            placeholder="Mô tả chi tiết về sản phẩm..."
           ></textarea>
+          @if (submitted() && f['description'].errors) {
+            <div class="invalid-feedback-list">
+              @if (f['description'].errors['required']) {
+                <div>Mô tả chi tiết không được để trống</div>
+              }
+              @if (f['description'].errors['minlength']) {
+                <div>Mô tả chi tiết phải dài hơn 20 ký tự</div>
+              }
+            </div>
+          }
         </div>
       </div>
     </section>
@@ -171,11 +200,11 @@
         </button>
       </div>
 
-      @if (variantError()) {
-        <div class="alert alert-warning border-0 rounded-3 mb-3">
-          <i class="bi bi-exclamation-triangle me-2"></i>{{ variantError() }}
-        </div>
-      }
+      <app-ui-notification
+        [message]="variantError()"
+        type="warning"
+        (dismiss)="variantError.set('')"
+      ></app-ui-notification>
 
       <div formArrayName="variants" class="variant-stack">
         @if (variantControls.length === 0) {
@@ -233,7 +262,7 @@
                     placeholder="Ví dụ: Màu đen / Size L"
                     formControlName="name"
                   />
-                  @if (submitted() && variant.get('name')?.errors) {
+                  @if (submittedVariants()[variant.get('uid')?.value] && variant.get('name')?.errors) {
                     <div class="invalid-feedback-list">
                       @if (variant.get('name')?.errors?.['required']) {
                         <div>Tên biến thể không được để trống</div>
@@ -263,7 +292,7 @@
                     placeholder="Ví dụ: 135000"
                     formControlName="price"
                   />
-                  @if (submitted() && variant.get('price')?.errors) {
+                  @if (submittedVariants()[variant.get('uid')?.value] && variant.get('price')?.errors) {
                     <div class="invalid-feedback-list">
                       @if (variant.get('price')?.errors?.['required']) {
                         <div>Giá biến thể không được để trống</div>
@@ -271,6 +300,36 @@
                       @if (variant.get('price')?.errors?.['pattern']) {
                         <div>Giá biến thể phải là số nguyên</div>
                       }
+                    </div>
+                  }
+                </div>
+
+                <div>
+                  <label class="form-label">Màu sắc</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Ví dụ: Hồng pastel"
+                    formControlName="color"
+                  />
+                  @if (submittedVariants()[variant.get('uid')?.value] && variant.get('color')?.errors) {
+                    <div class="invalid-feedback-list">
+                      <div>Màu sắc không được để trống</div>
+                    </div>
+                  }
+                </div>
+
+                <div>
+                  <label class="form-label">Kích thước</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Ví dụ: Vừa (2.0m)"
+                    formControlName="size"
+                  />
+                  @if (submittedVariants()[variant.get('uid')?.value] && variant.get('size')?.errors) {
+                    <div class="invalid-feedback-list">
+                      <div>Kích thước không được để trống</div>
                     </div>
                   }
                 </div>
@@ -283,6 +342,11 @@
                     accept="image/*"
                     (change)="onVariantImageChange(i, $event)"
                   />
+                  @if (submittedVariants()[variant.get('uid')?.value] && variant.get('imagePreview')?.errors) {
+                    <div class="invalid-feedback-list">
+                      <div>Ảnh biến thể không được để trống</div>
+                    </div>
+                  }
                   @if (variant.get('imagePreview')?.value) {
                     <div class="variant-image-preview mt-2">
                       <img

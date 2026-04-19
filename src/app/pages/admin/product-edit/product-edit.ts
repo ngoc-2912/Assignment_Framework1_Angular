@@ -6,6 +6,7 @@ import { ProductService } from '../../../services/product.service';
 import { VariantService } from '../../../services/variant.service';
 import { ICategory } from '../../../interfaces/category.interface';
 import { IProduct } from '../../../entities/product';
+import { UiNotification } from '../../../components/ui/notification/notification';
 
 type VariantFormValue = {
   uid: string;
@@ -13,6 +14,8 @@ type VariantFormValue = {
   name: string;
   sku: string;
   price: string;
+  color: string;
+  size: string;
   image: string;
   imageFile: File | null;
   imagePreview: string;
@@ -20,7 +23,7 @@ type VariantFormValue = {
 
 @Component({
   selector: 'app-product-edit',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, UiNotification],
   templateUrl: './product-edit.html',
   styleUrl: './product-edit.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,6 +40,7 @@ export class ProductEdit implements OnInit {
   productImagePreview = signal('');
   isSaving = signal(false);
   isSavingVariant = signal<Record<string, boolean>>({});
+  submittedVariants = signal<Record<string, boolean>>({});
   showVariantModal = signal(false);
   selectedVariantIndex = signal<number | null>(null);
   selectedVariantName = signal('');
@@ -50,7 +54,8 @@ export class ProductEdit implements OnInit {
     image: new FormControl('', [Validators.required]),
     category_id: new FormControl('', [Validators.required]),
     status: new FormControl('1'),
-    description: new FormControl(''),
+    short_description: new FormControl('', [Validators.required, Validators.minLength(10)]),
+    description: new FormControl('', [Validators.required, Validators.minLength(20)]),
     variants: new FormArray([]),
   });
 
@@ -105,9 +110,11 @@ export class ProductEdit implements OnInit {
         Validators.min(0),
         Validators.pattern('^[0-9]+$'),
       ]),
+      color: new FormControl(variant?.color ?? '', [Validators.required]),
+      size: new FormControl(variant?.size ?? '', [Validators.required]),
       image: new FormControl(variant?.image ?? ''),
       imageFile: new FormControl<File | null>(variant?.imageFile ?? null),
-      imagePreview: new FormControl(variant?.imagePreview ?? variant?.image ?? ''),
+      imagePreview: new FormControl(variant?.imagePreview ?? variant?.image ?? '', [Validators.required]),
     });
   }
 
@@ -165,15 +172,19 @@ export class ProductEdit implements OnInit {
 
   async saveVariant(index: number) {
     const control = this.variantControls[index];
+    const uid = control?.get('uid')?.value;
+
+    if (uid) {
+      this.submittedVariants.update((state) => ({ ...state, [uid]: true }));
+    }
 
     if (!control || control.invalid) {
       control?.markAllAsTouched();
       this.cdr.markForCheck();
       return;
     }
-
     const variant = control.getRawValue() as VariantFormValue;
-    const uid = variant.uid;
+  
 
     this.isSavingVariant.update((state) => ({ ...state, [uid]: true }));
     this.cdr.markForCheck();
@@ -187,13 +198,19 @@ export class ProductEdit implements OnInit {
         sku: variant.sku.trim() || null,
         price: Number(variant.price),
         image,
+        color: variant.color.trim() || null,
+        size: variant.size.trim() || null,
       };
 
       if (variant.id) {
         await this.variantService.editVariant(Number(variant.id), payload);
       } else {
         const res = await this.variantService.add(payload);
-        control.patchValue({ id: res.data.id });
+        const createdId = res?.data?.id ?? (res as any)?.variant?.id;
+
+        if (createdId) {
+          control.patchValue({ id: createdId });
+        }
       }
 
       this.message.set(`Lưu biến thể "${variant.name}" thành công!`);
@@ -253,6 +270,8 @@ export class ProductEdit implements OnInit {
           name: variant.name,
           sku: variant.sku ?? '',
           price: this.toIntegerString(variant.price),
+          color: variant.color ?? '',
+          size: variant.size ?? '',
           image: variant.image ?? '',
           imagePreview: variant.image ?? '',
           uid: `variant-${variant.id}`,
@@ -272,9 +291,9 @@ export class ProductEdit implements OnInit {
       this.message.set('');
 
       if (!Number.isFinite(this.id) || this.id <= 0) {
-        this.message.set('ID sản phẩm không hợp lệ. Vui lòng kiểm tra lại đường dẫn.');
-        this.messageType.set('danger');
-        this.cdr.markForCheck();
+        this.router.navigate(['/not-found'], {
+          state: { message: 'Sản phẩm không tồn tại!', linkUrl: '/admin/products' },
+        });
         return;
       }
 
@@ -291,6 +310,7 @@ export class ProductEdit implements OnInit {
         image: product.image,
         category_id: product.category_id.toString(),
         status: product.status.toString(),
+        short_description: product.short_description ?? '',
         description: product.description ?? '',
       });
 
@@ -300,7 +320,9 @@ export class ProductEdit implements OnInit {
       const statusCode = (error as any)?.response?.status;
 
       if (statusCode === 404) {
-        this.message.set('Sản phẩm không tồn tại hoặc đã bị xóa.');
+        this.router.navigate(['/not-found'], {
+          state: { message: 'Sản phẩm không tồn tại hoặc đã bị xóa!', linkUrl: '/admin/products' },
+        });
       } else if (statusCode === 401 || statusCode === 403) {
         this.message.set('Bạn không có quyền truy cập sản phẩm này.');
       } else {
