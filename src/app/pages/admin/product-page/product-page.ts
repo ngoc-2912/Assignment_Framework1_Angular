@@ -29,7 +29,7 @@ export class ProductPage implements OnInit {
 
   async loadProducts(page: number) {
     try {
-      const res = await this.productService.list(page);
+      const res = await this.productService.list(page, true);
       if (res && res.data) {
         this.products.set(res.data);
         this.totalPages.set(res.totalPages || 1);
