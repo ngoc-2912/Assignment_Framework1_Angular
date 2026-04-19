@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
 import { CurrencyPipe, isPlatformBrowser } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
 import { UserService } from '../../../services/user.service';
@@ -35,15 +35,23 @@ export class Dashboard implements OnInit, AfterViewInit {
     private userService: UserService,
     private orderService: OrderService,
     private productService: ProductService,
+    private cdr: ChangeDetectorRef, 
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
   }
 
   ngOnInit(): void {
-    this.loadUsers();
-    this.loadProducts();
-    this.loadOrders();
+    this.loadData();
+  }
+
+  async loadData() {
+    await Promise.all([
+      this.loadUsers(),
+      this.loadProducts(),
+      this.loadOrders()
+    ]);
+    this.cdr.detectChanges(); 
   }
 
   ngAfterViewInit(): void {
@@ -52,42 +60,38 @@ export class Dashboard implements OnInit, AfterViewInit {
   }
 
   tryRenderCharts() {
-    if (!this.isBrowser || !this.viewReady || this.orders.length === 0) return;
+    if (!this.isBrowser || !this.viewReady || this.allOrders.length === 0) return;
+    
     setTimeout(() => {
       this.renderRevenueChart();
       this.renderStatusChart();
+      this.cdr.detectChanges();
     }, 0);
   }
 
   loadUsers() {
-    this.userService.list()
+    return this.userService.list()
       .then((res: any) => {
         this.totalUsers = Array.isArray(res?.data) ? res.data.length : 0;
       })
-      .catch(err => {
-        console.error('Load users error:', err);
-        this.totalUsers = 0;
-      });
+      .catch(() => this.totalUsers = 0);
   }
 
   loadProducts() {
-    this.productService.list()
+    return this.productService.list()
       .then((res: any) => {
         this.totalProducts = Array.isArray(res?.data) ? res.data.length : 0;
       })
-      .catch(err => {
-        console.error('Load products error:', err);
-        this.totalProducts = 0;
-      });
+      .catch(() => this.totalProducts = 0);
   }
 
   loadOrders() {
-    this.orderService.list()
+    return this.orderService.list()
       .then((res: any) => {
         const raw = Array.isArray(res?.data) ? res.data : [];
         this.allOrders = raw;
-        this.orders = raw.filter((o: any) => Number(o?.status) === 2);
-        this.totalOrders = this.allOrders.length;
+        this.orders = raw.filter((o: any) => Number(o?.status) === 3);
+        this.totalOrders = this.orders.length;
         this.totalRevenue = this.orders.reduce(
           (sum: number, o: any) => sum + Number(o?.total_price || 0), 0
         );
@@ -95,23 +99,19 @@ export class Dashboard implements OnInit, AfterViewInit {
       })
       .catch(err => {
         console.error('Load orders error:', err);
-        this.allOrders = [];
-        this.orders = [];
-        this.totalOrders = 0;
-        this.totalRevenue = 0;
       });
   }
 
   renderRevenueChart() {
     if (!this.revenueCanvas?.nativeElement) return;
 
-    const sorted = [...this.orders].sort((a,b)=> new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+    const sorted = [...this.orders].sort((a,b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
     const labels = sorted.map(o => new Date(o.created_at).toLocaleDateString('vi-VN'));
     const data = sorted.map(o => Number(o.total_price || 0));
 
     if (this.revenueChart) this.revenueChart.destroy();
 
-    this.revenueChart = new Chart(this.revenueCanvas.nativeElement.getContext('2d')!, {
+    this.revenueChart = new Chart(this.revenueCanvas.nativeElement, {
       type: 'line',
       data: {
         labels,
@@ -131,31 +131,31 @@ export class Dashboard implements OnInit, AfterViewInit {
   renderStatusChart() {
     if (!this.statusCanvas?.nativeElement) return;
 
-    const counts:any = {};
+    const counts: any = { 0: 0, 1: 0, 2: 0, 3: 0 };
     this.allOrders.forEach((o: any) => {
       const status = Number(o.status);
       counts[status] = (counts[status] || 0) + 1;
     });
 
-    const statusLabels:any = {
+    const statusLabels: any = {
       0: 'Đã huỷ',
       1: 'Chờ xác nhận',
-      2: 'Hoàn thành',
-      3: 'Đang giao'
+      2: 'Đang giao',
+      3: 'Hoàn thành'
     };
 
-    const labels = Object.keys(counts).map(s => statusLabels[s] || `Status ${s}`);
+    const labels = Object.keys(counts).map(s => statusLabels[s] || `Trạng thái ${s}`);
     const data = Object.values(counts);
 
     if (this.statusChart) this.statusChart.destroy();
 
-    this.statusChart = new Chart(this.statusCanvas.nativeElement.getContext('2d')!, {
+    this.statusChart = new Chart(this.statusCanvas.nativeElement, {
       type: 'doughnut',
       data: {
         labels,
         datasets: [{
           data,
-          backgroundColor: ['#ef4444','#f59e0b','#22c55e','#3b82f6']
+          backgroundColor: ['#ef4444','#f59e0b','#3b82f6','#22c55e']
         }]
       },
       options: { responsive: true, maintainAspectRatio: false }

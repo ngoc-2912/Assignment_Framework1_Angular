@@ -65,7 +65,7 @@ export class OrderPage implements OnInit {
   getStatusClass(status: string) {
     switch (status) {
       case '0':
-        return 'bg-warning text-dark';
+        return 'bg-danger text-dark';
       case '1':
         return 'bg-info text-dark';
       case '2':
@@ -80,9 +80,9 @@ export class OrderPage implements OnInit {
   getStatusText(status: string) {
     switch (status) {
       case '0':
-        return 'Chờ xác nhận';
+        return 'Đã hủy';
       case '1':
-        return 'Đã xác nhận';
+        return 'Chờ xác nhận';
       case '2':
         return 'Đang giao';
       case '3':
