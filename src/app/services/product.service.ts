@@ -7,13 +7,12 @@ import { IProduct } from '../entities/product';
   providedIn: 'root',
 })
 export class ProductService extends BaseApi {
-  list(page: number = 1) {
-  return this.get<any>(
-    `${API_ENDPOINT.product.list}?page=${page}`
-  );
-}
+  list(page: number = 1, isAdmin: boolean = false) {
+    return this.get<any>(
+      `${API_ENDPOINT.product.list}?page=${page}&isAdmin=${isAdmin}`
+    );
+  }
 
-  // Lấy tất cả sản phẩm (không phân trang) cho trang chi tiết
   getAll() {
   return this.get<any>(`${API_ENDPOINT.product.list}?page=1&limit=100`);
 }
@@ -33,4 +32,5 @@ export class ProductService extends BaseApi {
   editProduct(id: number, data: any) {
     return this.put(`${API_ENDPOINT.product.edit}/${id}`, data);
   }
+  
 }
