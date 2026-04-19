@@ -20,7 +20,7 @@
     <div class="d-flex justify-content-between align-items-center">
       <div>
         <h3 class="fw-bold mb-0 text-dark">Danh sách đơn hàng</h3>
-        <span class="text-muted small">Tổng số: {{ orders().length }} đơn hàng hiện có</span>
+        <span class="text-muted small">Tổng số: {{ totalItems() }} đơn hàng hiện có</span>
       </div>
       <div class="d-flex gap-2">
 
@@ -79,5 +79,43 @@
         }
       </tbody>
     </table>
+
+  <!-- PAGINATION -->
+  @if (totalPages() > 1) {
+  <nav class="mt-4" aria-label="Phân trang đơn hàng">
+    <ul class="pagination justify-content-center pagination-lg">
+      <li class="page-item" [class.disabled]="currentPage() === 1">
+        <button 
+          class="page-link rounded-start-pill px-4" 
+          (click)="changePage(currentPage() - 1)"
+          [disabled]="currentPage() === 1"
+        >
+          <i class="bi bi-chevron-left"></i> Trước
+        </button>
+      </li>
+      @for (page of paginationRange; track page) {
+        <li class="page-item" [class.active]="currentPage() === page">
+          <button 
+            class="page-link px-4" 
+            [class.bg-dark]="currentPage() === page"
+            [class.border-dark]="currentPage() === page"
+            (click)="changePage(page)"
+          >
+            {{ page }}
+          </button>
+        </li>
+      }
+      <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+        <button 
+          class="page-link rounded-end-pill px-4" 
+          (click)="changePage(currentPage() + 1)"
+          [disabled]="currentPage() === totalPages()"
+        >
+          Sau <i class="bi bi-chevron-right"></i>
+        </button>
+      </li>
+    </ul>
+  </nav>
+  }
   </div>
 </div>

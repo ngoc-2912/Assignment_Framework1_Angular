@@ -14,21 +14,48 @@ export class OrderPage implements OnInit {
   orders = signal<IOrder[]>([]);
   message = signal('');
   messageType = signal('success');
+  currentPage = signal(1);
+  totalPages = signal(1);
+  totalItems = signal(0);
 
   ngOnInit(): void {
-    this.loadOrders();
+    this.loadOrders(1);
   }
 
-  loadOrders = async () => {
+  loadOrders = async (page: number = 1) => {
     try {
-      const res = await this.orderService.list();
+      const res = await this.orderService.list(page);
       if (res && res.data) {
         this.orders.set(res.data);
+        this.totalPages.set(res.totalPages || 1);
+        this.totalItems.set(res.totalItems || 0);
+        this.currentPage.set(res.currentPage || page);
       }
     } catch {
       this.showMessage('Không thể tải danh sách đơn hàng!', 'danger');
     }
   };
+
+  changePage(page: number) {
+    if (page < 1 || page > this.totalPages()) return;
+    this.loadOrders(page);
+  }
+
+  get paginationRange(): number[] {
+    const total = this.totalPages();
+    const maxVisible = 2;
+    
+    if (total <= maxVisible) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+    
+    // Show first 2 pages, 3rd page only if there are exactly 3 pages
+    if (total === 3) {
+      return [1, 2, 3];
+    }
+    
+    return [1, 2];
+  }
 
   formatPrice(price: string) {
     return `${Number(price).toLocaleString('vi-VN')}đ`;

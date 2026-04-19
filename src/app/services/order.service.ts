@@ -7,8 +7,8 @@ import { IOrder } from '../interfaces/order.interface';
   providedIn: 'root',
 })
 export class OrderService extends BaseApi {
-  list() {
-    return this.get<{ data: IOrder[] }>(API_ENDPOINT.order.list);
+  list(page: number = 1) {
+    return this.get<{ data: IOrder[]; totalItems: number; totalPages: number; currentPage: number }>(`${API_ENDPOINT.order.list}?page=${page}`);
   }
 
   getById(id: number) {
