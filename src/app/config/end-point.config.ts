@@ -29,7 +29,7 @@ export const API_ENDPOINT = {
     detail: '/orders',
     add: '/orders/add',
     update: '/orders',
-    myOrders: '/orders/my-orders',
+    myOrders: '/orders/list',
   },
   user: {
     list: '/users/list',

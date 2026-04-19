@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ProfileService } from '../../../services/profile.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IUser } from '../../../interfaces/user.interface';
+import { AuthService } from '../../../services/auth.service';
 import { UiNotification } from '../../../components/ui/notification/notification';
-import { UserService } from '../../../services/user.service';
+import { PLATFORM_ID, inject } from '@angular/core';
 
 @Component({
   selector: 'app-profile-page',
@@ -14,12 +15,15 @@ import { UserService } from '../../../services/user.service';
   styleUrl: './profile-page.scss'
 })
 export class ProfilePage implements OnInit {
+  private platformId = inject(PLATFORM_ID);
+
   user: IUser | null = null;
+  toastMessage = '';
+  toastType: 'success' | 'danger' | 'warning' | 'info' = 'info';
   orders: any[] = [];
   isLoadingProfile = false;
   isLoadingOrders = false;
-  toastMessage = '';
-  toastType: 'success' | 'danger' | 'warning' = 'success';
+  profileError = '';
 
   formPassword = {
     oldPassword: '',
@@ -30,12 +34,20 @@ export class ProfilePage implements OnInit {
 
   constructor(
     private profileService: ProfileService,
-    private userService: UserService,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.activeTab = 'welcome';
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
 
+    this.refreshData();
+  }
+
+  refreshData() {
+    this.activeTab = 'welcome';
     this.loadProfile();
     this.loadOrders();
   }
@@ -46,25 +58,31 @@ export class ProfilePage implements OnInit {
 
   loadProfile() {
     this.isLoadingProfile = true;
-    this.toastMessage = '';
+    this.profileError = '';
 
-    this.userService.getMe()
-      .then((res) => {
-        if (res?.data?.full_name && res?.data?.email) {
-          this.user = res.data;
-          return;
+    this.profileService.getProfile()
+      .then((res: any) => {
+        const mappedUser = this.extractUserFromResponse(res);
+        if (mappedUser) {
+          this.user = mappedUser;
+        } else {
+          this.user = this.getFallbackUserFromToken();
+          this.profileError = 'Không đọc được dữ liệu hồ sơ từ backend.';
         }
-
-        this.user = null;
-        this.showToast('Không đọc được dữ liệu hồ sơ từ getMe.', 'warning');
       })
       .catch(err => {
-        console.log(err);
-        this.user = null;
-        this.showToast('Không thể tải hồ sơ từ getMe. Vui lòng thử lại.', 'danger');
+        console.error('Profile Error:', err);
+        this.user = this.getFallbackUserFromToken();
+
+        if (err?.response?.status === 401) {
+          this.toastType = 'warning';
+        }
+
+        this.profileError = 'Không thể tải hồ sơ. Vui lòng thử lại.';
       })
       .finally(() => {
         this.isLoadingProfile = false;
+        this.cdr.detectChanges();
       });
   }
 
@@ -73,38 +91,40 @@ export class ProfilePage implements OnInit {
 
     this.profileService.getOrders()
       .then((res: any) => {
-        this.orders = res?.data || [];
+     
+        this.orders = res?.data || res || [];
       })
       .catch(err => {
-        console.log(err);
+        console.error('Orders Error:', err);
+
+        if (err?.response?.status === 401) {
+          this.toastType = 'warning';
+        }
+
         this.orders = [];
       })
       .finally(() => {
         this.isLoadingOrders = false;
+        this.cdr.detectChanges();  
       });
   }
 
   changePassword() {
+    if (!this.formPassword.oldPassword || !this.formPassword.newPassword) {
+      alert('Vui lòng nhập đầy đủ mật khẩu');
+      return;
+    }
+
     this.profileService.changePassword(this.formPassword)
       .then(() => {
-        this.showToast('Đổi mật khẩu thành công', 'success');
+        alert('Đổi mật khẩu thành công');
         this.formPassword = { oldPassword: '', newPassword: '' };
       })
       .catch(err => {
-        console.log(err);
-        this.showToast('Đổi mật khẩu thất bại', 'danger');
-      });
-  }
-
-  showToast(message: string, type: 'success' | 'danger' | 'warning') {
-    this.toastMessage = message;
-    this.toastType = type;
-
-    setTimeout(() => {
-      if (this.toastMessage === message) {
-        this.toastMessage = '';
-      }
-    }, 3000);
+        console.error(err);
+        alert('Đổi mật khẩu thất bại: ' + (err.error?.message || 'Lỗi hệ thống'));
+      })
+      .finally(() => this.cdr.detectChanges());
   }
 
   logout() {
@@ -113,18 +133,17 @@ export class ProfilePage implements OnInit {
     window.location.href = '/login';
   }
 
-  getOrderStatusClass(status: unknown): string {
-    const value = Number(status);
 
+  getOrderStatusClass(status: any): string {
+    const value = Number(status);
     if (value === 0) return 'bg-warning-subtle text-warning-emphasis';
     if (value === 1) return 'bg-info-subtle text-info-emphasis';
     if (value === 2) return 'bg-primary-subtle text-primary-emphasis';
     return 'bg-success-subtle text-success-emphasis';
   }
 
-  getOrderStatusLabel(status: unknown): string {
+  getOrderStatusLabel(status: any): string {
     const value = Number(status);
-
     if (value === 0) return 'Chờ xác nhận';
     if (value === 1) return 'Đã xác nhận';
     if (value === 2) return 'Đang giao';
@@ -133,12 +152,41 @@ export class ProfilePage implements OnInit {
 
   getAvatarInitial(): string {
     const fullName = this.user?.full_name?.trim();
-
-    if (!fullName) {
-      return 'U';
-    }
-
-    return fullName.charAt(0).toUpperCase();
+    return fullName ? fullName.charAt(0).toUpperCase() : 'U';
   }
 
+  private extractUserFromResponse(res: any): IUser | null {
+    if (!res) return null;
+
+    const data = res.data || res.user || res.profile || res;
+    
+    if (!data || !data.email) return null;
+
+    return {
+      id: Number(data.id || 0),
+      full_name: data.full_name || '',
+      email: data.email || '',
+      phone: data.phone || '',
+      address: data.address || '',
+      role: data.role || 'user',
+      active: String(data.active || '1'),
+      createdAt: data.createdAt || '',
+      updatedAt: data.updatedAt || '',
+    };
+  }
+
+  private getFallbackUserFromToken(): IUser | null {
+    const payload = this.authService.getTokenPayload();
+    if (!payload) return null;
+
+    return {
+      id: 0,
+      full_name: payload.full_name || 'Người dùng',
+      email: payload.email || '',
+      role: payload.role || 'user',
+      active: '1',
+      createdAt: '',
+      updatedAt: '',
+    };
+  }
 }
