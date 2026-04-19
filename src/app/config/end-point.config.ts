@@ -13,10 +13,10 @@ export const API_ENDPOINT = {
         edit: '/categories',
     },
     product: {
-        list: '/products/list',
-        add: '/products/add',
-        delete: '/products',
-        edit: '/products',
+        list: '/api/products',
+        add: '/api/products',
+        delete: '/api/products',
+        edit: '/api/products',
     },
     variant: {
         list: '/variants/list',
@@ -36,5 +36,12 @@ export const API_ENDPOINT = {
         update: '/users',
          profile: '/users/profile',
     changePassword: '/users/change-password'
+    },
+    orderDetail: {
+        list: '/orderdetails/list',
+        detail: '/orderdetails',
+        add: '/orderdetails/add',
+        edit: '/orderdetails',
+        delete: '/orderdetails',
     }
 }

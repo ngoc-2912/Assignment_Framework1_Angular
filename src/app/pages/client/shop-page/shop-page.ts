@@ -1,8 +1,17 @@
-import { ChangeDetectionStrategy, Component, OnInit, signal, computed, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  signal,
+  computed,
+  inject
+} from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { ProductService } from '../../../services/product.service'; 
+
+import { ProductService } from '../../../services/product.service';
 import { IProduct, IProductCategory } from '../../../entities/product';
 
 @Component({
@@ -16,53 +25,84 @@ import { IProduct, IProductCategory } from '../../../entities/product';
 export class ShopPage implements OnInit {
   private productService = inject(ProductService);
 
-  // Signals
+  // STATE
   products = signal<IProduct[]>([]);
-  categories = signal<IProductCategory[]>([]); // Danh sách danh mục từ API
-  searchQuery = signal<string>('');
+  categories = signal<IProductCategory[]>([]);
+
+  searchQuery = signal('');
   selectedCategoryId = signal<string | number>('all');
 
-  // Logic lọc tổng hợp
+  currentPage = signal(1);
+  totalPages = signal(1);
+  totalItems = signal(0);
+
+  ngOnInit() {
+    this.loadData(1);
+  }
+
+  // LOAD API (FIX CHUẨN THEO RESPONSE MỚI)
+  async loadData(page: number) {
+  try {
+    const res: any = await this.productService.list(page);
+
+    console.log('API:', res);
+
+    // DATA
+    const data = res?.data ?? [];
+
+    this.products.set(data);
+
+    // PAGINATION (QUAN TRỌNG)
+    this.totalItems.set(res.totalItems);
+    this.totalPages.set(res.totalPages);
+    this.currentPage.set(res.currentPage);
+
+    // CATEGORY UNIQUE
+    const uniqueCategories: IProductCategory[] = Array.from(
+      new Map<number, IProductCategory>(
+        data
+          .map((p: IProduct) => p.Category as IProductCategory)
+          .filter((c: IProductCategory | null | undefined): c is IProductCategory => !!c && !!c.id)
+          .map((c: IProductCategory) => [c.id, c])
+      ).values()
+    );
+
+    this.categories.set(uniqueCategories);
+
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+  // FILTER
   filteredProducts = computed(() => {
     let result = this.products();
 
-    // Lọc theo tên
-    const query = this.searchQuery().trim().toLowerCase();
-    if (query) {
-      result = result.filter(p => p.name.toLowerCase().includes(query));
+    const q = this.searchQuery().trim().toLowerCase();
+    if (q) {
+      result = result.filter(p =>
+        p.name.toLowerCase().includes(q)
+      );
     }
 
-    // Lọc theo ID danh mục
-    const cateId = this.selectedCategoryId();
-    if (cateId !== 'all') {
-      result = result.filter(p => p.category_id === Number(cateId));
+    const cate = this.selectedCategoryId();
+    if (cate !== 'all') {
+      result = result.filter(
+        p => Number(p.category_id) === Number(cate)
+      );
     }
 
     return result;
   });
 
-  ngOnInit() {
-    this.loadData();
-  }
+  // PAGE CHANGE
+changePage(page: number) {
+  if (page < 1 || page > this.totalPages()) return;
 
-  async loadData() {
-    try {
-      // Gọi song song cả products và có thể là categories nếu service bạn có hỗ trợ
-      const resProducts = await this.productService.list();
-      this.products.set(resProducts.data || []);
+  this.loadData(page);
+}
 
-      // Giả sử bạn có thêm api lấy categories, hoặc lấy từ chính list products
-      // Ở đây tớ trích xuất categories duy nhất từ list products để lọc cho chuẩn
-      const uniqueCates = resProducts.data
-        .map(p => p.Category)
-        .filter((value, index, self) => 
-          value && self.findIndex(v => v?.id === value.id) === index
-        ) as IProductCategory[];
-      
-      this.categories.set(uniqueCates);
-
-    } catch (err: any) {
-      console.error('Lỗi load data:', err);
-    }
+  get paginationRange(): number[] {
+    return Array.from({ length: this.totalPages() }, (_, i) => i + 1);
   }
 }

@@ -16,27 +16,42 @@ export class ProductPage implements OnInit {
   messageType = signal('success');
   showModal = signal(false);
   selectedProduct = signal<IProduct | null>(null);
+  currentPage = signal(1);
+  totalPages = signal(1);
+  totalItems = signal(0);
 
   constructor(private productService: ProductService) {}
 
   ngOnInit(): void {
-    this.loadProducts();
+    this.loadProducts(1);
   }
 
-  loadProducts = async () => {
+  async loadProducts(page: number) {
     try {
-      const res = await this.productService.list();
+      const res = await this.productService.list(page);
       if (res && res.data) {
         this.products.set(res.data);
+        this.totalPages.set(res.totalPages || 1);
+        this.totalItems.set(res.totalItems || 0);
+        this.currentPage.set(res.currentPage || page);
       }
     } catch {
       this.showMessage('Không thể tải danh sách sản phẩm!', 'danger');
     }
-  };
+  }
+
+  changePage(page: number) {
+    if (page < 1 || page > this.totalPages()) return;
+    this.loadProducts(page);
+  }
 
   selectProduct(product: IProduct) {
     this.selectedProduct.set(product);
     this.showModal.set(true);
+  }
+
+  get paginationRange(): number[] {
+    return Array.from({ length: this.totalPages() }, (_, i) => i + 1);
   }
 
   confirmDelete() {

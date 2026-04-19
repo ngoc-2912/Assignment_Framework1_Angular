@@ -50,14 +50,28 @@ export class ProductDetailPage implements OnInit {
   async loadDetail(nameFromUrl: string) {
     this.isLoading.set(true);
     try {
-      const res = await this.productService.list();
-      const data = res.data || [];
-      this.allProducts.set(data);
+      // Fetch all pages to find product by name
+      let allData: any[] = [];
+      let page = 1;
+      let hasMore = true;
+      
+      while (hasMore) {
+        const res = await this.productService.list(page);
+        const data = res.data || [];
+        allData = [...allData, ...data];
+        
+        if (data.length < 6 || page >= res.totalPages) {
+          hasMore = false;
+        } else {
+          page++;
+        }
+      }
 
       const decodedName = decodeURIComponent(nameFromUrl);
-      const foundProduct = data.find((p: any) => p.name === decodedName);
+      const foundProduct = allData.find((p: any) => p.name === decodedName);
 
       this.product.set(foundProduct || null);
+      this.allProducts.set(allData);
 
       // ✅ LOAD VARIANT
       if (foundProduct) {

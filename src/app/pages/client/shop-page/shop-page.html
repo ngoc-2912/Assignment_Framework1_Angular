@@ -14,7 +14,7 @@
         class="form-control"
         type="search"
         placeholder="Nhập tên sản phẩm, thương hiệu hoặc tính năng cần tìm..."
-        [(ngModel)]="searchQuery"
+        [ngModel]="searchQuery()"
         (ngModelChange)="searchQuery.set($event)"
       />
     </div>
@@ -23,7 +23,7 @@
       <select 
         id="category-product" 
         class="form-select"
-        [(ngModel)]="selectedCategoryId"
+        [ngModel]="selectedCategoryId()"
         (ngModelChange)="selectedCategoryId.set($event)"
       >
         <option value="all">Tất cả danh mục</option>
@@ -51,7 +51,7 @@
             [src]="product.image"
             [alt]="product.name"
             class="card-img-top"
-            style="height: 200px; object-fit: cover;"
+            style="height: 200px; object-fit: contain; width: 100%; background: #fff;"
           />
         </a>
         <div class="card-body d-flex flex-column">
@@ -92,3 +92,45 @@
     </div>
   }
 </section>
+
+<!-- PAGINATION -->
+@if (totalPages() > 1) {
+<nav class="mt-5" aria-label="Phân trang sản phẩm">
+  <ul class="pagination justify-content-center pagination-lg">
+    
+    <li class="page-item" [class.disabled]="currentPage() === 1">
+      <button 
+        class="page-link rounded-start-pill px-4" 
+        (click)="changePage(currentPage() - 1)"
+        [disabled]="currentPage() === 1"
+      >
+        <i class="bi bi-chevron-left"></i> Trước
+      </button>
+    </li>
+
+    @for (page of paginationRange; track page) {
+      <li class="page-item" [class.active]="currentPage() === page">
+        <button 
+          class="page-link px-4" 
+          [class.bg-dark]="currentPage() === page"
+          [class.border-dark]="currentPage() === page"
+          (click)="changePage(page)"
+        >
+          {{ page }}
+        </button>
+      </li>
+    }
+
+    <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+      <button 
+        class="page-link rounded-end-pill px-4" 
+        (click)="changePage(currentPage() + 1)"
+        [disabled]="currentPage() === totalPages()"
+      >
+        Sau <i class="bi bi-chevron-right"></i>
+      </button>
+    </li>
+
+  </ul>
+</nav>
+}
