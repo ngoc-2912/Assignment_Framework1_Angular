@@ -26,7 +26,7 @@
         <div class="profile-card-main text-center p-4 shadow-sm bg-white rounded-5 h-100">
           <div class="avatar-container mb-3 position-relative d-inline-block">
             <img [src]="'https://ui-avatars.com/api/?name=' + currentUser.full_name + '&size=120&background=4e73df&color=fff'" 
-                 class="rounded-circle img-thumbnail border-0 shadow" alt="Avatar">
+                 class="rounded-circle img-thumbnail border-0 shadow">
             <span class="status-dot position-absolute shadow border border-white border-2" 
                   [class.bg-success]="currentUser.active == '1'"
                   [class.bg-danger]="currentUser.active == '0'"></span>
@@ -75,27 +75,49 @@
               </div>
             </div>
 
+            <!-- ⭐ BOX QUẢN LÝ TRẠNG THÁI -->
             <div class="status-update-box p-4 rounded-5 bg-dark-luxury text-white shadow">
               <div class="row align-items-center">
                 <div class="col-lg-7 mb-3 mb-lg-0">
                   <h5 class="fw-bold text-white mb-1">Quản lý trạng thái</h5>
-                  <p class="text-white-50 small mb-0">Cập nhật quyền truy cập của người dùng.</p>
+                  <p class="text-white-50 small mb-0">
+                    Cập nhật quyền truy cập của người dùng.
+                  </p>
+
+                  <!-- ⭐ THÔNG BÁO SELF ACCOUNT -->
+                  @if (isSelfAccount()) {
+                    <div class="mt-2 text-warning small">
+                      Bạn không thể vô hiệu hóa tài khoản đang đăng nhập.
+                    </div>
+                  }
                 </div>
+
                 <div class="col-lg-5">
                   <div class="input-group luxury-input-group shadow-sm">
+                    <!-- disable select nếu là chính mình -->
                     <select class="form-select border-0 py-3 ps-3 text-dark fw-bold"
                       [value]="selectedActive()"
-                      (change)="selectedActive.set($any($event.target).value)">
+                      (change)="selectedActive.set($any($event.target).value)"
+                      [disabled]="isSelfAccount()">
                       <option value="1">Hoạt động</option>
                       <option value="0">Bị khóa</option>
                     </select>
-                    <button class="btn btn-primary px-4 fw-bold text-uppercase small" type="button" (click)="updateActive()">
+
+                    <!-- disable button nếu là chính mình -->
+                    <button 
+                      class="btn btn-primary px-4 fw-bold text-uppercase small"
+                      type="button"
+                      (click)="updateActive()"
+                      [disabled]="isSelfAccount()">
                       Lưu
                     </button>
+
                   </div>
                 </div>
               </div>
             </div>
+            <!-- END BOX -->
+
           </div>
         </div>
       </div>
