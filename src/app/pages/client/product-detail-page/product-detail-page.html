@@ -13,16 +13,16 @@
   <section class="row g-4 align-items-start mb-5">
     <div class="col-lg-6">
       <div class="detail-image rounded-4 overflow-hidden shadow-sm bg-white">
-        <!-- ẢNH CHÍNH (có variant) -->
+        <!-- Ảnh chính -->
         <img
-          [src]="selectedVariant()?.image || product()?.image || 'assets/no-image.png'"
-          [alt]="product()?.name"
+          [src]="mainImage()"
+          [alt]="productName()"
           class="w-100 main-product-image"
         />
       </div>
 
-      <!-- ẢNH NHỎ VARIANT -->
-      @if (variants().length > 0) {
+      <!-- Danh sách ảnh biến thể -->
+      @if (hasVariants()) {
         <div class="d-flex mt-3 flex-wrap variant-thumbs">
           @for (v of variants(); track v.id) {
             <img
@@ -30,7 +30,8 @@
               class="variant-thumb"
               [class.border]="selectedVariant()?.id === v.id"
               [class.border-dark]="selectedVariant()?.id === v.id"
-              (click)="selectedVariant.set(v)"
+              [alt]="v.name"
+              (click)="selectVariant(v)"
             />
           }
         </div>
@@ -40,26 +41,26 @@
     <div class="col-lg-6">
       <p class="text-secondary mb-2">
         Thương hiệu: <strong>SmartNest</strong> •
-        {{ product()?.Category?.name || 'Chưa phân loại' }}
+        {{ categoryName() }}
       </p>
       <h1 class="display-6 fw-bold mb-3">
-        {{ product()?.name || 'Sản phẩm đang cập nhật tên...' }}
+        {{ productName() }}
       </h1>
       <p class="lead text-secondary">
-        {{ product()?.short_description || 'Mô tả ngắn đang được cập nhật.' }}
+        {{ shortDescription() }}
       </p>
 
       <div class="d-flex gap-3 align-items-end mb-3">
         <div>
-          <!-- GIÁ THEO VARIANT -->
+          <!-- Giá hiển thị: ưu tiên giá biến thể, không có thì lấy giá sản phẩm -->
           <p class="fw-bold fs-3 mb-0 text-danger">
-            {{ +(selectedVariant()?.price ?? product()?.price ?? 0) | number }} VND
+            {{ displayPrice() | number }} VND
           </p>
         </div>
       </div>
 
-      <!-- CHỌN VARIANT -->
-      @if (variants().length > 0) {
+      <!-- Chọn biến thể -->
+      @if (hasVariants()) {
         <div class="mt-3 mb-3">
           <label class="form-label fw-semibold mb-2" for="variantSelect">Chọn biến thể</label>
 
@@ -102,7 +103,7 @@
           class="btn btn-dark btn-lg"
           type="button"
           (click)="addToCart()"
-          [disabled]="isAddingToCart() || (variants().length > 0 && !selectedVariant())"
+          [disabled]="isAddingToCart() || (hasVariants() && !selectedVariant())"
         >
           {{ isAddingToCart() ? 'Đang thêm...' : 'Thêm vào giỏ' }}
         </button>
@@ -115,7 +116,7 @@
     </div>
   </section>
 
-  <!-- PHẦN DƯỚI GIỮ NGUYÊN -->
+  <!-- Phần mô tả -->
   <section class="mb-5">
     <div class="bg-white rounded-4 p-4 p-lg-5 shadow-sm border">
       <h2 class="h4 fw-bold mb-3">Mô tả chi tiết</h2>
