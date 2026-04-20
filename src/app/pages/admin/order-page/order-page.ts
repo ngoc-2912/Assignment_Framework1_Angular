@@ -80,7 +80,7 @@ export class OrderPage implements OnInit {
   getStatusText(status: string) {
     switch (status) {
       case '0':
-        return 'Đã hủy';
+        return 'Đang xử lý';
       case '1':
         return 'Chờ xác nhận';
       case '2':
