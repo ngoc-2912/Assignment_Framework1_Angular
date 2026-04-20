@@ -17,6 +17,7 @@
       <div>
         <h3 class="fw-bold mb-0 text-dark">Danh sách người dùng</h3>
         <p class="text-muted small mb-0">Quản lý thông tin và phân quyền thành viên</p>
+        <span class="text-muted small">Tổng số: {{ totalItems() }} người dùng</span>
       </div>
     </div>
   </div>
@@ -82,4 +83,23 @@
       </tbody>
     </table>
   </div>
+
+  @if (totalPages() > 1) {
+    <div class="mt-4 pb-4 text-center">
+      <button class="btn btn-sm btn-outline-secondary me-1" (click)="changePage(currentPage() - 1)" [disabled]="currentPage() === 1">❮</button>
+
+      @for (page of paginationRange(); track page) {
+        <button
+          class="btn btn-sm me-1"
+          [class.btn-dark]="currentPage() === page"
+          [class.btn-outline-secondary]="currentPage() !== page"
+          (click)="changePage(page)"
+        >
+          {{ page }}
+        </button>
+      }
+
+      <button class="btn btn-sm btn-outline-secondary" (click)="changePage(currentPage() + 1)" [disabled]="currentPage() === totalPages()">❯</button>
+    </div>
+  }
 </div>

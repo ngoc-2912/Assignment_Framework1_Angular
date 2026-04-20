@@ -7,8 +7,8 @@ import { IUser } from '../interfaces/user.interface';
   providedIn: 'root',
 })
 export class UserService extends BaseApi {
-  list() {
-    return this.get<{ data: IUser[] }>(API_ENDPOINT.user.list);
+  list(page: number = 1) {
+    return this.get<{ data: IUser[]; totalItems: number; totalPages: number; currentPage: number }>(`${API_ENDPOINT.user.list}?page=${page}`);
   }
 
   getById(id: number) {
